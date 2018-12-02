@@ -13,7 +13,7 @@ class Message(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     # sentBy = models.CharField(max_length=50)
     detail = models.TextField(max_length=100)
-    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
+    ticket = models.ForeignKey(Ticket)
 
 
 class Invoice(models.Model):
@@ -45,14 +45,13 @@ class Announcement(models.Model):
 class Meter(models.Model):
     address = models.CharField(max_length=50)
     meter_num = models.IntegerField(max_length=20)
-    area = models.ForeignKey(Area, on_delete=models.CASCADE())
-    # Area
+    area = models.ForeignKey(Area)
 
 
 class Consumption(models.Model):
     time_stamp = models.DateTimeField(auto_now_add=True)
     units = models.PositiveIntegerField(max_length=5)
-    meter = models.ForeignKey(Meter, on_delete=models.CASCADE)
+    meter = models.ForeignKey(Meter)
 
 
 class City(models.Model):
@@ -64,11 +63,10 @@ class User(models.Model):
     cnic = models.PositiveIntegerField(max_length=15)
     phone_num = models.PositiveIntegerField(len(15))
     street_add = models.CharField(max_length=50)
-    # area
     area = models.ForeignKey(Area, on_delete=models.CASCADE())
     meter = models.ForeignKey(Meter, on_delete=models.CASCADE())
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE())
-    subscription = models.ForeignKey(Subscription, on_delete=models.CASCADE())
+    subscription = models.ForeignKey(Subscription)
 
 
 
