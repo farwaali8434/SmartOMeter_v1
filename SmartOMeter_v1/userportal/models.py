@@ -61,11 +61,11 @@ class City(models.Model):
 
 class User(models.Model):
     cnic = models.PositiveIntegerField(max_length=15)
-    phone_num = models.PositiveIntegerField(len(15))
+    phone_num = models.PositiveIntegerField(max_length=15)
     street_add = models.CharField(max_length=50)
-    area = models.ForeignKey(Area, on_delete=models.CASCADE())
-    meter = models.ForeignKey(Meter, on_delete=models.CASCADE())
-    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE())
+    area = models.ForeignKey(Area)
+    meter = models.ForeignKey(Meter)
+    invoice = models.ForeignKey(Invoice)
     subscription = models.ForeignKey(Subscription)
 
 
