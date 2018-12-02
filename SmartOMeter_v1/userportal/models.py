@@ -1,18 +1,19 @@
 from django.db import models
 
 
+class Ticket(models.Model):
+    status = models.CharField(max_length=10)
+    date_opened = models.DateField(auto_now_add=True)
+    date_closed = models.DateField(auto_now_add=True)
+    title = models.CharField(max_length=50)
+
+
 class Message(models.Model):
     subject = models.CharField(max_length=50)
     created = models.DateTimeField(auto_now_add=True)
     # sentBy = models.CharField(max_length=50)
     detail = models.TextField(max_length=100)
-
-
-class Ticket(models.Model):
-    status = models.CharField(max_length=10)
-    dateOpened = models.DateField(auto_now_add=True)
-    dateClosed = models.DateField(auto_now_add=True)
-    title = models.CharField(max_length=50)
+    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
 
 
 class Invoice(models.Model):
@@ -25,13 +26,8 @@ class Subscription(models.Model):
     rates = models.PositiveIntegerField(max_length=5)
 
 
-class Consumption(models.Model):
-    timestamp = models.DateTimeField(auto_now_add=True)
-    units = models.PositiveIntegerField(max_length=5)
-
-
 class Area(models.Model):
-    areaName = models.TextField()
+    area_name = models.TextField()
     city = models.CharField(max_length=15)
     zone = models.CharField(max_length=15)
     # block = models.CharField(5)
@@ -39,24 +35,40 @@ class Area(models.Model):
 
 
 class Announcement(models.Model):
-    effectiveFrom = models.TimeField()
-    effectiveTill = models.TimeField()
+    effective_from = models.TimeField()
+    effective_till = models.TimeField()
     subject = models.CharField(max_length=50)
     detail = models.CharField(max_length=100)
+    areas = models.ManyToManyField(Area)
 
 
 class Meter(models.Model):
     address = models.CharField(max_length=50)
-    meterNum = models.IntegerField(max_length=20)
+    meter_num = models.IntegerField(max_length=20)
+    area = models.ForeignKey(Area, on_delete=models.CASCADE())
     # Area
 
 
+class Consumption(models.Model):
+    time_stamp = models.DateTimeField(auto_now_add=True)
+    units = models.PositiveIntegerField(max_length=5)
+    meter = models.ForeignKey(Meter, on_delete=models.CASCADE)
+
+
 class City(models.Model):
-    postalCode = models.PositiveIntegerField(max_length=5)
-    cityName = models.CharField(max_length=20)
+    postal_code = models.PositiveIntegerField(max_length=5)
+    city_name = models.CharField(max_length=20)
 
 
-
+class User(models.Model):
+    cnic = models.PositiveIntegerField(max_length=15)
+    phone_num = models.PositiveIntegerField(len(15))
+    street_add = models.CharField(max_length=50)
+    # area
+    area = models.ForeignKey(Area, on_delete=models.CASCADE())
+    meter = models.ForeignKey(Meter, on_delete=models.CASCADE())
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE())
+    subscription = models.ForeignKey(Subscription, on_delete=models.CASCADE())
 
 
 
