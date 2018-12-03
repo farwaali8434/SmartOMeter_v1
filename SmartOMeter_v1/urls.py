@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url, include
 from rest_framework import routers
-from SmartOMeter_v1.userportal import views
+from userportal import views
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
