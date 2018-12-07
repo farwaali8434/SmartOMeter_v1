@@ -61,7 +61,7 @@ class City(models.Model):
 
 class Area(models.Model):
     area_name = models.CharField(max_length=SHORT_LENGTH)
-    zone = models.CharField(max_length=SHORT_LENGTH)
+    division = models.CharField(max_length=SHORT_LENGTH)
     city = models.ForeignKey(City, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -82,6 +82,9 @@ class Invoice(models.Model):
     amount = models.FloatField(default=DEFAULT_BILL)
     paid = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    reading_date = models.DateField(auto_now=True)
+    issue_date = models.DateField(auto_now=True)
+    due_date = models.DateField(auto_now=True)
 
     def __str__(self):
         return str(self.amount) + ' ' + self.month

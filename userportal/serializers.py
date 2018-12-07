@@ -28,7 +28,7 @@ class AreaSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Area
-        fields = ('area_name', 'zone', 'city')
+        fields = ('area_name', 'division', 'city')
 
 
 class SubscriptionSerializer(serializers.HyperlinkedModelSerializer):
@@ -76,7 +76,7 @@ class InvoiceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Invoice
-        fields = ('month', 'amount', 'paid', 'user')
+        fields = ('month', 'amount', 'reading_date', 'issue_date', 'due_date', 'paid', 'user')
 
 
 class AnnouncementSerializer(serializers.HyperlinkedModelSerializer):
