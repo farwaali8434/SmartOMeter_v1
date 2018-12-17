@@ -17,12 +17,21 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url, include
 from rest_framework import routers
-from SmartOMeter_v1.userportal import views
+from userportal import views
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
-
+router.register(r'cities', views.CityViewSet)
+router.register(r'areas', views.AreaViewSet)
+router.register(r'tickets', views.TicketViewSet)
+router.register(r'messages', views.MessageViewSet)
+router.register(r'meters', views.MeterViewSet)
+router.register(r'invoices', views.InvoiceViewSet)
+router.register(r'subscriptions', views.SubscriptionViewSet)
+router.register(r'announcements', views.AnnouncementViewSet)
+router.register(r'consumptions', views.ConsumptionViewSet)
+router.register(r'profile', views.ProfileViewSet)
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 
