@@ -41,7 +41,7 @@ class Ticket(models.Model):
 
 
 class Message(models.Model):
-    subject = models.CharField(max_length=MEDIUM_LENGTH)
+    # subject = models.CharField(max_length=MEDIUM_LENGTH)
     created = models.DateTimeField(auto_now_add=True)
     detail = models.TextField(max_length=LONG_LENGTH)
     user = models.ForeignKey(User, on_delete=models.CASCADE)

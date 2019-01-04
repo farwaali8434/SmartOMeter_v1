@@ -68,7 +68,7 @@ class MessageSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Message
-        fields = ('subject', 'created', 'detail', 'ticket')
+        fields = ('created', 'detail', 'ticket')
 
 
 class InvoiceSerializer(serializers.HyperlinkedModelSerializer):
