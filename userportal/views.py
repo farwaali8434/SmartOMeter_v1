@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
-from rest_framework import viewsets
-
+from rest_framework import viewsets, generics
+from rest_framework.response import Response
 
 from userportal.models import City, Area, Ticket, Invoice, Message
 from userportal.models import Consumption, Announcement, Profile, Subscription, Meter
@@ -15,6 +15,12 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
+
+
+class UsersDetailView(generics.RetrieveAPIView):
+    def get(self, request, *args, **kwargs):
+        queryset = User.objects.get(id=request.user.id)
+        return Response(UserSerializer(queryset, context={'request': request}).data)
 
 
 class GroupViewSet(viewsets.ModelViewSet):
