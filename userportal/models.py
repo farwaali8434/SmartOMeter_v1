@@ -56,7 +56,7 @@ class Message(models.Model):
 
 
 class City(models.Model):
-    postal_code = models.PositiveIntegerField(max_length=5)
+    postal_code = models.PositiveIntegerField()
     city_name = models.CharField(max_length=SHORT_LENGTH)
 
     def __str__(self):
@@ -74,7 +74,7 @@ class Area(models.Model):
 
 class Meter(models.Model):
     street = models.CharField(max_length=MEDIUM_LENGTH)
-    meter_num = models.IntegerField(max_length=ID_LENGTH)
+    meter_num = models.IntegerField()
     area = models.ForeignKey(Area, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -123,7 +123,7 @@ class Announcement(models.Model):
 
 class Consumption(models.Model):
     time_stamp = models.DateTimeField(auto_now_add=True)
-    units = models.PositiveIntegerField(max_length=5)
+    units = models.PositiveIntegerField()
     meter = models.ForeignKey(Meter, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -132,8 +132,8 @@ class Consumption(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    cnic = models.PositiveIntegerField(max_length=ID_LENGTH, null=True)
-    phone_num = models.PositiveIntegerField(max_length=ID_LENGTH, null=True)
+    cnic = models.PositiveIntegerField(null=True)
+    phone_num = models.PositiveIntegerField(null=True)
     street = models.CharField(max_length=MEDIUM_LENGTH, null=True)
     area = models.ForeignKey(Area, on_delete=models.CASCADE, null=True)
     meter = models.ForeignKey(Meter, on_delete=models.CASCADE, null=True)
