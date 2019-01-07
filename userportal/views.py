@@ -18,12 +18,6 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 
-class UsersDetailView(generics.RetrieveAPIView):
-    def get(self, request, *args, **kwargs):
-        queryset = User.objects.get(id=request.user.id)
-        return Response(UserSerializer(queryset, context={'request': request}).data)
-
-
 class GroupViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
