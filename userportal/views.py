@@ -92,6 +92,12 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
     """
     queryset = Announcement.objects.all()
     serializer_class = AnnouncementSerializer
+    def list(self,request):
+        return super().list(request)
+    # def get_queryset(self):
+    #     if self.request.user.is_superuser:
+    #         return self.queryset.all()
+    #     return self.request.announcement_set.all()
 
 
 class ConsumptionViewSet(viewsets.ModelViewSet):

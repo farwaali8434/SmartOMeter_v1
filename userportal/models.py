@@ -111,10 +111,14 @@ class Announcement(models.Model):
     effective_till = models.TimeField()
     subject = models.CharField(max_length=50)
     detail = models.CharField(max_length=100)
-    areas = models.ManyToManyField(Area)
+    area = models.ManyToManyField(Area)
 
     def __str__(self):
         return self.subject
+
+    def __str__(self):
+        return f"-id: {self.id}, title: {self.subject}, detail: {self.detail}, area: {self.area}," \
+            f" effective_from: {self.effective_from}, effective_till: {self.effective_till}-"
 
 
 class Consumption(models.Model):

@@ -97,12 +97,11 @@ class InvoiceSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('month', 'amount', 'reading_date', 'issue_date', 'due_date', 'paid', 'user')
 
 
-class AnnouncementSerializer(serializers.HyperlinkedModelSerializer):
-    area = AreaSerializer()
+class AnnouncementSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Announcement
-        fields = ('subject', 'detail', 'effective_from', 'effective_till', 'area')
+        fields = ('id', 'subject', 'detail', 'effective_from', 'effective_till', 'area')
 
 
 class ConsumptionSerializer(serializers.HyperlinkedModelSerializer):
