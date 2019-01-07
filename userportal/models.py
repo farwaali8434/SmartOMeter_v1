@@ -34,7 +34,8 @@ class Ticket(models.Model):
     status = models.CharField(max_length=1, choices=STATUSES)
     date_opened = models.DateTimeField(auto_now_add=True)
     date_closed = models.DateTimeField(null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
     @property
     def messages(self):
         return self.message_set.all()
@@ -45,9 +46,9 @@ class Ticket(models.Model):
 
 
 class Message(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
+    sent = models.DateTimeField(auto_now_add=True)
     detail = models.TextField(max_length=LONG_LENGTH)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    sent_by = models.ForeignKey(User, on_delete=models.CASCADE)
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
 
     def __str__(self):

@@ -59,19 +59,19 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
-        fields = ('detail', 'user', 'ticket')
-        read_only_fields = ('ticket', 'user')
+        fields = ('detail', 'sent_by', 'ticket', 'sent')
+        read_only_fields = ('ticket', 'sent_by')
 
 
 class TicketSerializer(serializers.ModelSerializer):
     messages = MessageSerializer(many=True, partial=True)
 
     def create(self, validated_data):
-        validated_data.update({'user': self.context['request'].user})
+        validated_data.update({'created_by': self.context['request'].user})
         messages = validated_data.pop('messages')
         ticket = Ticket.objects.create(**validated_data)
         for message in messages:
-            message.update({'user': self.context['request'].user})
+            message.update({'sent_by': self.context['request'].user})
             Message.objects.create(**message, ticket=ticket)
         return ticket
     #
@@ -85,8 +85,8 @@ class TicketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = ('id', 'subject', 'status', 'date_opened', 'date_closed', 'user', 'messages')
-        read_only_fields = ('user',)
+        fields = ('id', 'subject', 'status', 'date_opened', 'date_closed', 'created_by', 'messages')
+        read_only_fields = ('created_by',)
 
 
 class InvoiceSerializer(serializers.HyperlinkedModelSerializer):
