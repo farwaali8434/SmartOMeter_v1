@@ -5,10 +5,10 @@ from userportal.models import City, Area, Ticket, Consumption, Invoice
 from userportal.models import Meter, Profile, Subscription, Announcement, Message
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('url', 'username', 'email', 'groups')
+        fields = ('id', 'username', 'email', 'groups')
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
@@ -55,20 +55,38 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('user', 'cnic', 'phone_num', 'street', 'meter', 'subscription')
 
 
-class TicketSerializer(serializers.HyperlinkedModelSerializer):
-    user = ProfileSerializer()
-
-    class Meta:
-        model = Ticket
-        fields = ('status', 'title', 'date_opened', 'date_closed', 'user')
-
-
-class MessageSerializer(serializers.HyperlinkedModelSerializer):
-    ticket = TicketSerializer()
+class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
-        fields = ('subject', 'created', 'detail', 'ticket')
+        fields = ('detail', 'user', 'ticket')
+        read_only_fields = ('ticket', 'user')
+
+
+class TicketSerializer(serializers.ModelSerializer):
+    messages = MessageSerializer(many=True, partial=True)
+
+    def create(self, validated_data):
+        validated_data.update({'user': self.context['request'].user})
+        messages = validated_data.pop('messages')
+        ticket = Ticket.objects.create(**validated_data)
+        for message in messages:
+            message.update({'user': self.context['request'].user})
+            Message.objects.create(**message, ticket=ticket)
+        return ticket
+    #
+    # def update(self, ticket, validated_data):
+    #     messages = validated_data.pop('messages')
+    #     ticket.title = validated_data.get('title', ticket.title)
+    #     ticket.status = validated_data.get('title', ticket.status)
+    #     ticket.date_closed = validated_data.get('date_closed', ticket.date_closed)
+    #     ticket.save()
+    #     keep_messages =
+
+    class Meta:
+        model = Ticket
+        fields = ('id', 'subject', 'status', 'date_opened', 'date_closed', 'user', 'messages')
+        read_only_fields = ('user',)
 
 
 class InvoiceSerializer(serializers.HyperlinkedModelSerializer):

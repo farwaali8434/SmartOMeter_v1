@@ -4,6 +4,7 @@ from rest_framework.response import Response
 
 from userportal.models import City, Area, Ticket, Invoice, Message
 from userportal.models import Consumption, Announcement, Profile, Subscription, Meter
+
 from userportal.serializers import UserSerializer, GroupSerializer, CitySerializer, ProfileSerializer
 from userportal.serializers import MeterSerializer, AnnouncementSerializer, InvoiceSerializer, MessageSerializer
 from userportal.serializers import TicketSerializer, ConsumptionSerializer, AreaSerializer, SubscriptionSerializer
@@ -53,6 +54,11 @@ class TicketViewSet(viewsets.ModelViewSet):
     """
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return self.queryset.all()
+        return self.request.user.ticket_set.all()
 
 
 class MessageViewSet(viewsets.ModelViewSet):

@@ -30,25 +30,28 @@ class Ticket(models.Model):
         ('E', 'Escalated'),
         ('C', 'Closed'),
     )
-    title = models.CharField(max_length=MEDIUM_LENGTH)
+    subject = models.CharField(max_length=MEDIUM_LENGTH)
     status = models.CharField(max_length=1, choices=STATUSES)
     date_opened = models.DateTimeField(auto_now_add=True)
     date_closed = models.DateTimeField(null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    @property
+    def messages(self):
+        return self.message_set.all()
 
     def __str__(self):
-        return self.title
+        return f"-id: {self.id}, title: {self.subject}, status: {self.status}," \
+               f" created: {self.date_opened}, closed: {self.date_closed}-"
 
 
 class Message(models.Model):
-    subject = models.CharField(max_length=MEDIUM_LENGTH)
     created = models.DateTimeField(auto_now_add=True)
     detail = models.TextField(max_length=LONG_LENGTH)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.subject
+        return self.detail
 
 
 class City(models.Model):
