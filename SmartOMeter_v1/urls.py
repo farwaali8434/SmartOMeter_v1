@@ -21,18 +21,11 @@ from userportal import views
 from .views import login
 
 router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
-router.register(r'cities', views.CityViewSet)
-router.register(r'areas', views.AreaViewSet)
+
 router.register(r'tickets', views.TicketViewSet)
-router.register(r'messages', views.MessageViewSet)
-router.register(r'meters', views.MeterViewSet)
 router.register(r'invoices', views.InvoiceViewSet)
-router.register(r'subscriptions', views.SubscriptionViewSet)
 router.register(r'announcements', views.AnnouncementViewSet)
 router.register(r'consumptions', views.ConsumptionViewSet)
-router.register(r'profile', views.ProfileViewSet)
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 
@@ -42,3 +35,10 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/login', login)
 ]
+
+# Permissions = {
+#     "Create": ([Staff, Admin], False),
+#     "Read": ([Consumer!, Staff*, Admin*], False),
+#     "Update": ([Staff!, Admin*], False),
+#     "Delete": ([Admin*], False)
+# }
