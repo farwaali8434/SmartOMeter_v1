@@ -27,5 +27,11 @@ def login(request):
         return Response({'error': 'Invalid Credentials'},
                         status=HTTP_404_NOT_FOUND)
     token, _ = Token.objects.get_or_create(user=user)
-    return Response({'token': token.key, 'user': UserSerializer(user).data},
+    return Response({'token': token.key},
                     status=HTTP_200_OK)
+
+
+@csrf_exempt
+@api_view(["Get"])
+def user(request):
+    return Response(UserSerializer(request.user).data, status=HTTP_200_OK)

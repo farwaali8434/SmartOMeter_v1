@@ -18,7 +18,7 @@ from django.urls import path
 from django.conf.urls import url, include
 from rest_framework import routers
 from userportal import views
-from .views import login
+from .views import login, user
 
 router = routers.DefaultRouter()
 
@@ -33,7 +33,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^api/', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^api/login', login)
+    url(r'^api/login', login),
+    url(r'^api/user', user)
 ]
 
 # Permissions = {

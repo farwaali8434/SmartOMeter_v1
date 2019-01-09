@@ -37,6 +37,7 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
     """
     queryset = models.Announcement.objects.all()
     serializer_class = serializers.AnnouncementSerializer
-
+    #
     # def get_queryset(self):
-    #     return self.request.announcement_set.all()
+    #     area = self.request.user.profile.area
+    #     return models.Announcement.objects.filter(area_)
