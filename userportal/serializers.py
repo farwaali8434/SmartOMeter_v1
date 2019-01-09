@@ -92,7 +92,7 @@ class AnnouncementSerializer(serializers.ModelSerializer):
 class ConsumptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Consumption
-        fields = ('units', 'time_stamp')
+        fields = ('id', 'units', 'time_stamp', 'meter')
 
 
 class InvoiceSerializer(serializers.ModelSerializer):

@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.permissions import AllowAny
 
 from userportal import models
 from userportal import serializers
@@ -18,6 +19,7 @@ class ConsumptionViewSet(viewsets.ModelViewSet):
     """
     queryset = models.Consumption.objects.all()
     serializer_class = serializers.ConsumptionSerializer
+    permission_classes = [AllowAny]
 
 
 class TicketViewSet(viewsets.ModelViewSet):
