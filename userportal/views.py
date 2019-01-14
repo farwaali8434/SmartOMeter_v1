@@ -1,6 +1,9 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+import stripe
 
+from SmartOMeter_v1 import settings
 from userportal import models
 from userportal import serializers
 
@@ -43,3 +46,23 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
     # def get_queryset(self):
     #     area = self.request.user.profile.area
     #     return models.Announcement.objects.filter(area_)
+
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+
+class PaymentsAPI(generics.CreateAPIView):
+
+    def post(self, request, *args, **kwargs):
+        token = request.data['stripe_token']
+        try:
+            stripe.Charge.create(
+                amount=13000,
+                currency='PKR',
+                description='random',
+                card=token
+            )
+        except stripe.error.CardError as e:
+            body = e.json_body
+            Response({'errors': body.get('error', {})}, status=400)
+        return Response({"status": "complete"}, status=200)

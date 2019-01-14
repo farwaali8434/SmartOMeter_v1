@@ -34,7 +34,8 @@ urlpatterns = [
     url(r'^api/', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/login', login),
-    url(r'^api/user', user)
+    url(r'^api/user', user),
+    url(r'^api/charge', views.PaymentsAPI.as_view())
 ]
 
 # Permissions = {

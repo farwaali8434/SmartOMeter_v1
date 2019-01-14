@@ -25,8 +25,6 @@ SECRET_KEY = 'xk!=98_^_b&e*+3&q+v8a!l27%c*(jzl)zfteuw$2-ox4bx_p%'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -145,3 +143,5 @@ CORS_ORIGIN_WHITELIST = (
 )
 
 ALLOWED_HOSTS = ['*']
+
+STRIPE_SECRET_KEY = 'sk_test_lGm5U96oPDvmC2RZ21OwcjMR'
