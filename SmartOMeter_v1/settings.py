@@ -29,7 +29,7 @@ DEBUG = True
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    'SmartOMeter_v1.apps.SmartAdminConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

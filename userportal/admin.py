@@ -1,4 +1,5 @@
 from django.contrib import admin
+from rest_framework.authtoken.models import Token
 
 from userportal.models import *
 
@@ -12,3 +13,5 @@ admin.site.register(Subscription)
 admin.site.register(Announcement)
 admin.site.register(Consumption)
 admin.site.register(Profile)
+
+admin.site.unregister(Token)

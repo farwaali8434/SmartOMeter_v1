@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+
+
 ID_LENGTH = 15
 DEFAULT_RATE = 10
 DEFAULT_BILL = 300
