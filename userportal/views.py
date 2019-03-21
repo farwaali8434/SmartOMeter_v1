@@ -66,3 +66,8 @@ class PaymentsAPI(generics.CreateAPIView):
             body = e.json_body
             Response({'errors': body.get('error', {})}, status=400)
         return Response({"status": "complete"}, status=200)
+
+
+def index(request):
+    from django.shortcuts import render
+    return render(request, "master.html")
