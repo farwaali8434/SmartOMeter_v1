@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'userportal',
+    'channels',
     'corsheaders'
 ]
 
@@ -71,7 +72,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'SmartOMeter_v1.wsgi.application'
-
+ASGI_APPLICATION = 'SmartOMeter_v1.routing.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases

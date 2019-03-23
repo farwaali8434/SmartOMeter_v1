@@ -20,6 +20,7 @@ from rest_framework import routers
 from userportal import views
 from .views import login, user
 
+
 router = routers.DefaultRouter()
 
 router.register(r'tickets', views.TicketViewSet)
@@ -36,7 +37,9 @@ urlpatterns = [
     url(r'^api/login', login),
     url(r'^api/user', user),
     url(r'^api/charge', views.PaymentsAPI.as_view()),
-    path('', include('userportal.urls'))
+    path('', include('userportal.urls')),
+    path('chat/', include('userportal.urls', namespace='chat')),
+
 ]
 
 # Permissions = {

@@ -2,10 +2,12 @@ from rest_framework import viewsets, generics
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 import stripe
-
+from django.shortcuts import render
 from SmartOMeter_v1 import settings
 from userportal import models
 from userportal import serializers
+from django.utils.safestring import mark_safe
+import json
 
 
 class InvoiceViewSet(viewsets.ModelViewSet):
@@ -71,3 +73,13 @@ class PaymentsAPI(generics.CreateAPIView):
 def index(request):
     from django.shortcuts import render
     return render(request, "demandanalysis.html")
+
+
+def index1(request):
+    return render(request, 'userportal/index1.html', {})
+
+
+def room(request, room_name):
+    return render(request, 'userportal/room.html', {
+        'room_name_json': mark_safe(json.dumps(room_name))
+    })
