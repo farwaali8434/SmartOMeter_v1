@@ -1,10 +1,6 @@
-# from datetime import datetime as dt, timedelta
-# import loadForecast as lf
 import pandas as pd
-import sm_forcaster as sm
-import tensorflow as tf
-
-from LoadForecaster import Forecaster
+import load_forecaster.sm_forcaster as sm
+from load_forecaster.LoadForecaster import Forecaster
 
 datafile = 'data/NCENT.csv'
 useful_data = 'data/useful_data.csv'

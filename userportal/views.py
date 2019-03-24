@@ -1,9 +1,13 @@
 from rest_framework import viewsets, generics
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from django.shortcuts import render
+import pandas as pd
 import stripe
 
 from SmartOMeter_v1 import settings
+import load_forecaster.sm_forcaster as sm
+from load_forecaster.LoadForecaster import Forecaster
 from userportal import models
 from userportal import serializers
 
@@ -69,5 +73,9 @@ class PaymentsAPI(generics.CreateAPIView):
 
 
 def index(request):
-    from django.shortcuts import render
-    return render(request, "dashboard.html", {'username': 'wadood'})
+    forecaster = Forecaster('load_forecaster/checkpoint/forecaster.h5')
+    context = {
+        'username': 'wadood',
+
+    }
+    return render(request, "dashboard.html", context)
