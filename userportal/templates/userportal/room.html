@@ -11,6 +11,7 @@
 </body>
 <script>
     var roomName = {{ room_name_json }};
+    var username = {{ username }}
 
     var chatSocket = new WebSocket(
         'ws://' + window.location.host +
@@ -38,7 +39,8 @@
         var message = messageInputDom.value;
         chatSocket.send(JSON.stringify({
             'message': message,
-            'command':'fetch_messages'
+            'command': 'new_message',
+            'from': username
         }));
 
         messageInputDom.value = '';
