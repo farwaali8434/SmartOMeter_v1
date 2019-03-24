@@ -70,4 +70,4 @@ class PaymentsAPI(generics.CreateAPIView):
 
 def index(request):
     from django.shortcuts import render
-    return render(request, "demandanalysis.html")
+    return render(request, "dashboard.html", {'username': 'wadood'})
