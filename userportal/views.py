@@ -8,6 +8,7 @@ from userportal import models
 from userportal import serializers
 from django.utils.safestring import mark_safe
 import json
+from django.contrib.auth.decorators import login_required
 
 
 class InvoiceViewSet(viewsets.ModelViewSet):
@@ -78,9 +79,9 @@ def index(request):
 def index1(request):
     return render(request, 'userportal/index1.html', {})
 
-
+@login_required
 def room(request, room_name):
     return render(request, 'userportal/room.html', {
         'room_name_json': mark_safe(json.dumps(room_name)),
-        'username': mark_safe(json.dumps(request.user.username))
+        'username': mark_safe(json.dumps(request.user.username)),
     })
