@@ -143,6 +143,18 @@ class Profile(models.Model):
         return self.user.username
 
 
+class Chat(models.Model):
+    author = models.ForeignKey(User, related_name='author_message',on_delete=models.CASCADE)
+    content = models.TextField(null=True)
+    timestamp1 = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.author.username
+
+    def last_10_msgs(selfs):
+        return Chat.objects.order_by('-timestamp').all()[:10]
+
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
