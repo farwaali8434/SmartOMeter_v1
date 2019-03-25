@@ -1,9 +1,7 @@
 from userportal.models import Consumption
 
 consumptions = Consumption.objects.filter(time_stamp__year=2018)
-
 year = {'sum': 0}
-
 for c in consumptions:
     load = c.units
     month = c.time_stamp.month

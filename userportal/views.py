@@ -2,30 +2,27 @@ from rest_framework import viewsets, generics
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.shortcuts import render
-import pandas as pd
 import stripe
 
 from SmartOMeter_v1 import settings
-import load_forecaster.sm_forcaster as sm
 from load_forecaster.LoadForecaster import Forecaster
-from userportal import models
-from userportal import serializers
+from userportal.helpers import *
 
 
 class InvoiceViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = models.Invoice.objects.all()
-    serializer_class = serializers.InvoiceSerializer
+    queryset = Invoice.objects.all()
+    serializer_class = InvoiceSerializer
 
 
 class ConsumptionViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = models.Consumption.objects.all()
-    serializer_class = serializers.ConsumptionSerializer
+    queryset = Consumption.objects.all()
+    serializer_class = ConsumptionSerializer
     permission_classes = [AllowAny]
 
 
@@ -33,8 +30,8 @@ class TicketViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = models.Ticket.objects.all()
-    serializer_class = serializers.TicketSerializer
+    queryset = Ticket.objects.all()
+    serializer_class = TicketSerializer
 
     def get_queryset(self):
         return self.request.user.ticket_set.all()
@@ -44,12 +41,12 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = models.Announcement.objects.all()
-    serializer_class = serializers.AnnouncementSerializer
+    queryset = Announcement.objects.all()
+    serializer_class = AnnouncementSerializer
     #
     # def get_queryset(self):
     #     area = self.request.user.profile.area
-    #     return models.Announcement.objects.filter(area_)
+    #     return Announcement.objects.filter(area_)
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -72,10 +69,12 @@ class PaymentsAPI(generics.CreateAPIView):
         return Response({"status": "complete"}, status=200)
 
 
+# forecaster = Forecaster('load_forecaster/checkpoint/forecaster.h5')
+
 def index(request):
-    forecaster = Forecaster('load_forecaster/checkpoint/forecaster.h5')
     context = {
         'username': 'wadood',
-
+        'year': consumption_sum(2018),
+        'open_tickets': tickets(status=['O'])
     }
     return render(request, "dashboard.html", context)
