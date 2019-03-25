@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets, generics
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -70,11 +71,19 @@ class PaymentsAPI(generics.CreateAPIView):
 
 
 # forecaster = Forecaster('load_forecaster/checkpoint/forecaster.h5')
-
-def index(request):
+@login_required
+def dashboard(request):
     context = {
         'username': 'wadood',
         'year': consumption_sum(2018),
         'open_tickets': tickets(status=['O'])
     }
     return render(request, "dashboard.html", context)
+
+
+@login_required
+def profile(request):
+    context = {
+        'username': 'wadood'
+    }
+    return render(request, "registration/profile.html", context)

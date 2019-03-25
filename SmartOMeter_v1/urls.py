@@ -17,25 +17,27 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url, include
 from rest_framework import routers
-from userportal import views
+from userportal.views import *
 from .views import login, user
 
 router = routers.DefaultRouter()
 
-router.register(r'tickets', views.TicketViewSet)
-router.register(r'invoices', views.InvoiceViewSet)
-router.register(r'announcements', views.AnnouncementViewSet)
-router.register(r'consumptions', views.ConsumptionViewSet)
+router.register(r'tickets', TicketViewSet)
+router.register(r'invoices', InvoiceViewSet)
+router.register(r'announcements', AnnouncementViewSet)
+router.register(r'consumptions', ConsumptionViewSet)
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
     url(r'^api/', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/login', login),
     url(r'^api/user', user),
-    url(r'^api/charge', views.PaymentsAPI.as_view()),
+    url(r'^api/charge', PaymentsAPI.as_view()),
+
     path('', include('userportal.urls'))
 ]
 
