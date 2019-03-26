@@ -1,4 +1,7 @@
+import datetime
+
 from rest_framework import viewsets, generics
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.shortcuts import render
@@ -20,13 +23,26 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.InvoiceSerializer
 
 
+class ConsumptionPagination(PageNumberPagination):
+    page_size = 744
+
+
 class ConsumptionViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
     queryset = models.Consumption.objects.all()
     serializer_class = serializers.ConsumptionSerializer
-    permission_classes = [AllowAny]
+    pagination_class = ConsumptionPagination
+
+    class meta:
+        ordering = ['time_stamp']
+
+    def get_queryset(self):
+        today = datetime.datetime.now().date()
+        return models.Consumption.objects.filter(meter__profile__user=self.request.user,
+                                                 time_stamp__month=today.month,
+                                                 time_stamp__year=today.year)
 
 
 class TicketViewSet(viewsets.ModelViewSet):
@@ -46,10 +62,10 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
     """
     queryset = models.Announcement.objects.all()
     serializer_class = serializers.AnnouncementSerializer
-    #
-    # def get_queryset(self):
-    #     area = self.request.user.profile.area
-    #     return models.Announcement.objects.filter(area_)
+
+    def get_queryset(self):
+        area = self.request.user.profile.area
+        return models.Announcement.objects.filter(area=area)
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
