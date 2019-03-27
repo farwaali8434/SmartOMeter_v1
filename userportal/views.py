@@ -3,7 +3,6 @@ import datetime
 from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets, generics
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.shortcuts import render
 import stripe
