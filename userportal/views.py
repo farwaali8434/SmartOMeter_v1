@@ -1,5 +1,8 @@
+import datetime
+
 from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets, generics
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.shortcuts import render
@@ -8,31 +11,46 @@ import stripe
 from SmartOMeter_v1 import settings
 from load_forecaster.LoadForecaster import Forecaster
 from userportal.helpers import *
+from userportal import models
+from userportal import serializers
 
 
 class InvoiceViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Invoice.objects.all()
-    serializer_class = InvoiceSerializer
+    queryset = models.Invoice.objects.all()
+    serializer_class = serializers.InvoiceSerializer
+
+
+class ConsumptionPagination(PageNumberPagination):
+    page_size = 744
 
 
 class ConsumptionViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Consumption.objects.all()
-    serializer_class = ConsumptionSerializer
-    permission_classes = [AllowAny]
+    queryset = models.Consumption.objects.all()
+    serializer_class = serializers.ConsumptionSerializer
+    pagination_class = ConsumptionPagination
+
+    class meta:
+        ordering = ['time_stamp']
+
+    def get_queryset(self):
+        today = datetime.datetime.now().date()
+        return models.Consumption.objects.filter(meter__profile__user=self.request.user,
+                                                 time_stamp__month=today.month,
+                                                 time_stamp__year=today.year)
 
 
 class TicketViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Ticket.objects.all()
-    serializer_class = TicketSerializer
+    queryset = models.Ticket.objects.all()
+    serializer_class = serializers.TicketSerializer
 
     def get_queryset(self):
         return self.request.user.ticket_set.all()
@@ -42,12 +60,12 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Announcement.objects.all()
-    serializer_class = AnnouncementSerializer
-    #
-    # def get_queryset(self):
-    #     area = self.request.user.profile.area
-    #     return Announcement.objects.filter(area_)
+    queryset = models.Announcement.objects.all()
+    serializer_class = serializers.AnnouncementSerializer
+
+    def get_queryset(self):
+        area = self.request.user.profile.area
+        return models.Announcement.objects.filter(area=area)
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
