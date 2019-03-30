@@ -1,16 +1,16 @@
 import datetime
 
+from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets, generics
+from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.shortcuts import render
-import pandas as pd
 import stripe
 
 from SmartOMeter_v1 import settings
-import load_forecaster.sm_forcaster as sm
 from load_forecaster.LoadForecaster import Forecaster
+from userportal.helpers import *
 from userportal import models
 from userportal import serializers
 
@@ -35,7 +35,7 @@ class ConsumptionViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ConsumptionSerializer
     pagination_class = ConsumptionPagination
 
-    class meta:
+    class Meta:
         ordering = ['time_stamp']
 
     def get_queryset(self):
@@ -43,6 +43,18 @@ class ConsumptionViewSet(viewsets.ModelViewSet):
         return models.Consumption.objects.filter(meter__profile__user=self.request.user,
                                                  time_stamp__month=today.month,
                                                  time_stamp__year=today.year)
+
+    @action(methods=['get'], detail=False)
+    def predictions(self, request, *args, **kwargs):
+        past_consumptions = [c for c in self.get_queryset()]
+        c = Consumption(units=234, temperature=25, meter_id=1, time_stamp=datetime.datetime.now())
+        past_consumptions.append(c)
+        page = self.paginate_queryset(past_consumptions)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(past_consumptions, many=True)
+        return Response(serializer.data)
 
 
 class TicketViewSet(viewsets.ModelViewSet):
@@ -88,10 +100,20 @@ class PaymentsAPI(generics.CreateAPIView):
         return Response({"status": "complete"}, status=200)
 
 
-def index(request):
-    forecaster = Forecaster('load_forecaster/checkpoint/forecaster.h5')
+# forecaster = Forecaster('load_forecaster/checkpoint/forecaster.h5')
+@login_required
+def dashboard(request):
     context = {
         'username': 'wadood',
-
+        'year': consumption_sum(2018),
+        'open_tickets': tickets(status=['O'])
     }
     return render(request, "dashboard.html", context)
+
+
+@login_required
+def profile(request):
+    context = {
+        'username': 'wadood'
+    }
+    return render(request, "registration/profile.html", context)
