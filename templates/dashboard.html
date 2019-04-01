@@ -1,0 +1,75 @@
+{% extends 'master.html' %}
+
+
+{% block content %}
+    <div class="content-header">
+    <h1>Dashboard</h1>
+    </div>
+    <div class="content">
+        <div class="row">
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-aqua">
+                    <i class="ion ion-ios-gear-outline"></i>
+                </span>
+                <div class="info-box-content">
+                  <span class="info-box-text">Pending Tickets</span>
+                  <span class="info-box-number">{{ open_tickets|length }}</span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+            <!-- /.col -->
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-aqua">
+                    <i class="ion ion-ios-gear-outline"></i>
+                </span>
+                <div class="info-box-content">
+                  <span class="info-box-text">Pending Tickets</span>
+                  <span class="info-box-number"></span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+            <!-- /.col -->
+            <div class="col-md-3 col-sm-6 col-xs-12">
+              <div class="info-box">
+                <span class="info-box-icon bg-aqua">
+                    <i class="ion ion-ios-gear-outline"></i>
+                </span>
+                <div class="info-box-content">
+                  <span class="info-box-text">Pending Tickets</span>
+                  <span class="info-box-number">{number of opened tickets}</span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+              <div class="box box-warning">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Consumption Chart</h3>
+
+                  <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                  </div>
+                  <!-- /.box-tools -->
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body" style="">
+                  The body of the box
+                </div>
+                <!-- /.box-body -->
+              </div>
+              <!-- /.box -->
+            </div>
+        </div>
+    </div>
+{% endblock content %}

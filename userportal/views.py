@@ -1,9 +1,16 @@
+import datetime
+
+from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets, generics
-from rest_framework.permissions import AllowAny
+from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
+from django.shortcuts import render
 import stripe
 from django.shortcuts import render
 from SmartOMeter_v1 import settings
+from load_forecaster.LoadForecaster import Forecaster
+from userportal.helpers import *
 from userportal import models
 from userportal import serializers
 from django.utils.safestring import mark_safe
@@ -19,13 +26,38 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.InvoiceSerializer
 
 
+class ConsumptionPagination(PageNumberPagination):
+    page_size = 744
+
+
 class ConsumptionViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
     queryset = models.Consumption.objects.all()
     serializer_class = serializers.ConsumptionSerializer
-    permission_classes = [AllowAny]
+    pagination_class = ConsumptionPagination
+
+    class Meta:
+        ordering = ['time_stamp']
+
+    def get_queryset(self):
+        today = datetime.datetime.now().date()
+        return models.Consumption.objects.filter(meter__profile__user=self.request.user,
+                                                 time_stamp__month=today.month,
+                                                 time_stamp__year=today.year)
+
+    @action(methods=['get'], detail=False)
+    def predictions(self, request, *args, **kwargs):
+        past_consumptions = [c for c in self.get_queryset()]
+        c = Consumption(units=234, temperature=25, meter_id=1, time_stamp=datetime.datetime.now())
+        past_consumptions.append(c)
+        page = self.paginate_queryset(past_consumptions)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(past_consumptions, many=True)
+        return Response(serializer.data)
 
 
 class TicketViewSet(viewsets.ModelViewSet):
@@ -45,10 +77,10 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
     """
     queryset = models.Announcement.objects.all()
     serializer_class = serializers.AnnouncementSerializer
-    #
-    # def get_queryset(self):
-    #     area = self.request.user.profile.area
-    #     return models.Announcement.objects.filter(area_)
+
+    def get_queryset(self):
+        area = self.request.user.profile.area
+        return models.Announcement.objects.filter(area=area)
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -71,13 +103,28 @@ class PaymentsAPI(generics.CreateAPIView):
         return Response({"status": "complete"}, status=200)
 
 
-def index(request):
-    from django.shortcuts import render
-    return render(request, "demandanalysis.html")
+# forecaster = Forecaster('load_forecaster/checkpoint/forecaster.h5')
+@login_required
+def dashboard(request):
+    context = {
+        'username': 'wadood',
+        'year': consumption_sum(2018),
+        'open_tickets': tickets(status=['O'])
+    }
+    return render(request, "dashboard.html", context)
+
+
+@login_required
+def profile(request):
+    context = {
+        'username': 'wadood'
+    }
+    return render(request, "registration/profile.html", context)
 
 
 def index1(request):
     return render(request, 'userportal/index1.html', {})
+
 
 @login_required
 def room(request, room_name):

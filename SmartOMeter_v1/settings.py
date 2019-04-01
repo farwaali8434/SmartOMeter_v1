@@ -134,6 +134,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
+
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
@@ -157,3 +158,9 @@ CORS_ORIGIN_WHITELIST = (
 ALLOWED_HOSTS = ['*']
 
 STRIPE_SECRET_KEY = 'sk_test_lGm5U96oPDvmC2RZ21OwcjMR'
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_REDIRECT_URL = 'login'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
