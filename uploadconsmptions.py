@@ -43,15 +43,15 @@ if "__main__":
     today = datetime.today()
     for index, row in data.iterrows():
         if row['time_stamp'].year == 2019:
-            values2 = f"'{row['time_stamp']}', {row['temp_n']}, {row['temp_n^2']}, {row['load_prev_n']}, {row['years_n']}"
-            query2 = f'INSERT INTO userportal_temperary (time_stamp, temp_n, temp_nn, load_prev_n, years_n) VALUES ({values2})'
-            cursor.execute(query2)
+            # values2 = f"'{row['time_stamp']}', {row['temp_n']}, {row['temp_n^2']}, {row['load_prev_n']}, {row['years_n']}"
+            # query2 = f'INSERT INTO userportal_temperary (time_stamp, temp_n, temp_nn, load_prev_n, years_n) VALUES ({values2})'
+            # cursor.execute(query2)
 
             if row['time_stamp'] > today:
                 continue
             values = f"'{row['time_stamp']}', {2}, {row['load']}, {row['tempc']}"
             query = f'INSERT INTO userportal_consumption (time_stamp, meter_id, units, temperature) VALUES ({values})'
-            # cursor.execute(query)
+            cursor.execute(query)
 
     cursor.close()
     connection.commit()

@@ -1,5 +1,6 @@
 import datetime
 
+import pandas as pd
 from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets, generics
 from rest_framework.decorators import action
@@ -56,6 +57,7 @@ class ConsumptionViewSet(viewsets.ModelViewSet):
     @action(methods=['get'], detail=False)
     def predictions(self, request, *args, **kwargs):
         past_consumptions = [c for c in self.get_queryset()]
+        forecaster = Forecaster('load_forecaster/checkpoint/forecaster.h5')
         today = datetime.datetime.now()
         future_inputs = Temperary.objects.filter(time_stamp__month=today.month,
                                                  time_stamp__gt=past_consumptions[-1].time_stamp)
@@ -65,15 +67,17 @@ class ConsumptionViewSet(viewsets.ModelViewSet):
                 future_tensors[week_day].append(1 if fi.time_stamp.weekday() == index else 0)
 
             for index, mon in enumerate(self.month_labels, 1):
-                future_tensors[mon].append(1 if fi.month == index else 0)
+                future_tensors[mon].append(1 if fi.time_stamp.month == index else 0)
 
             for index, hour in enumerate(self.hour_labels):
-                future_tensors[hour].append(1 if fi.hour == index else 0)
+                future_tensors[hour].append(1 if fi.time_stamp.hour == index else 0)
 
             future_tensors['temp_n'].append(fi.temp_n)
             future_tensors['temp_n^2'].append(fi.temp_nn)
-            future_tensors['years_n'].append(fi.year_n)
+            future_tensors['years_n'].append(fi.years_n)
             future_tensors['load_prev_n'].append(fi.load_prev_n)
+
+        prediction = forecaster.predict(pd.DataFrame(future_tensors))
 
         page = self.paginate_queryset(past_consumptions)
         if page is not None:
@@ -127,7 +131,7 @@ class PaymentsAPI(generics.CreateAPIView):
         return Response({"status": "complete"}, status=200)
 
 
-# forecaster = Forecaster('load_forecaster/checkpoint/forecaster.h5')
+
 @login_required
 def dashboard(request):
     context = {
