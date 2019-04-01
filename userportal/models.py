@@ -144,6 +144,14 @@ class Profile(models.Model):
         return self.user.username
 
 
+class Temperary(models.Model):
+    time_stamp = models.DateTimeField(auto_now_add=True)
+    load_prev_n = models.FloatField()
+    temp_n = models.FloatField()
+    temp_nn = models.FloatField()
+    years_n = models.FloatField()
+
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:

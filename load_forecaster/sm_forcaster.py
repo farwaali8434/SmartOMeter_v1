@@ -33,7 +33,7 @@ def make_useful_df(data, noise=2.5, hours_prior=24):
 
     # create month vector
     month_labels = [("m" + str(i)) for i in range(1, 12 + 1)]
-    for index, month in enumerate(month_labels):
+    for index, month in enumerate(month_labels, 1):
         result_df[month] = (result_df["dates"].dt.month == index).astype(int)
 
     temperature = data["tempc"].replace([-9999], np.nan)

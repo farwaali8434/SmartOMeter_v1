@@ -44,15 +44,42 @@ class ConsumptionViewSet(viewsets.ModelViewSet):
                                                  time_stamp__month=today.month,
                                                  time_stamp__year=today.year)
 
+    day_labels = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"]
+    hour_labels = [("h" + str(i)) for i in range(24)]
+    month_labels = [("m" + str(i)) for i in range(1, 12 + 1)]
+    input_columns = {'MON': [], 'TUE': [], 'WED': [], 'THU': [], 'FRI': [], 'SAT': [], 'SUN': [],
+                     'h0': [], 'h1': [], 'h2': [], 'h3': [], 'h4': [], 'h5': [], 'h6': [], 'h7': [], 'h8': [], 'h9': [], 'h10': [], 'h11': [],
+                     'h12': [], 'h13': [], 'h14': [], 'h15': [], 'h16': [], 'h17': [], 'h18': [], 'h19': [], 'h20': [], 'h21': [], 'h22': [], 'h23': [],
+                     'm1': [], 'm2': [], 'm3': [], 'm4': [], 'm5': [], 'm6': [], 'm7': [], 'm8': [], 'm9': [], 'm10': [], 'm11': [], 'm12': [],
+                     'temp_n': [], 'temp_n^2': [], 'years_n': [], 'load_prev_n': []}
+
     @action(methods=['get'], detail=False)
     def predictions(self, request, *args, **kwargs):
         past_consumptions = [c for c in self.get_queryset()]
-        c = Consumption(units=234, temperature=25, meter_id=1, time_stamp=datetime.datetime.now())
-        past_consumptions.append(c)
+        today = datetime.datetime.now()
+        future_inputs = Temperary.objects.filter(time_stamp__month=today.month,
+                                                 time_stamp__gt=past_consumptions[-1].time_stamp)
+        future_tensors = self.input_columns.copy()
+        for fi in future_inputs:
+            for index, week_day in enumerate(self.day_labels):
+                future_tensors[week_day].append(1 if fi.time_stamp.weekday() == index else 0)
+
+            for index, mon in enumerate(self.month_labels, 1):
+                future_tensors[mon].append(1 if fi.month == index else 0)
+
+            for index, hour in enumerate(self.hour_labels):
+                future_tensors[hour].append(1 if fi.hour == index else 0)
+
+            future_tensors['temp_n'].append(fi.temp_n)
+            future_tensors['temp_n^2'].append(fi.temp_nn)
+            future_tensors['years_n'].append(fi.year_n)
+            future_tensors['load_prev_n'].append(fi.load_prev_n)
+
         page = self.paginate_queryset(past_consumptions)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
+
         serializer = self.get_serializer(past_consumptions, many=True)
         return Response(serializer.data)
 
