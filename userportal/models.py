@@ -84,9 +84,9 @@ class Meter(models.Model):
 class Invoice(models.Model):
     month = models.CharField(max_length=SHORT_LENGTH, choices=MONTHS)
     amount = models.FloatField(default=DEFAULT_BILL)
+    month_units = models.FloatField()
     paid = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    reading_date = models.DateField(auto_now=True)
     issue_date = models.DateField(auto_now=True)
     due_date = models.DateField(auto_now=True)
 
@@ -123,7 +123,7 @@ class Announcement(models.Model):
 
 class Consumption(models.Model):
     time_stamp = models.DateTimeField(auto_now_add=True)
-    units = models.PositiveIntegerField()
+    units = models.FloatField()
     meter = models.ForeignKey(Meter, on_delete=models.CASCADE)
     temperature = models.FloatField()
 
