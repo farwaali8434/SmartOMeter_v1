@@ -76,8 +76,10 @@ class ConsumptionViewSet(viewsets.ModelViewSet):
             future_tensors['temp_n^2'].append(fi.temp_nn)
             future_tensors['years_n'].append(fi.years_n)
             future_tensors['load_prev_n'].append(fi.load_prev_n)
-
-        prediction = forecaster.predict(pd.DataFrame(future_tensors))
+        predictions = forecaster.predict(pd.DataFrame(future_tensors))
+        past_consumptions += [Consumption(id=0, time_stamp=fi.time_stamp, units=output,
+                                          meter_id=past_consumptions[-1].meter_id, temperature=25)
+                              for fi, output in zip(future_inputs, predictions)]
 
         page = self.paginate_queryset(past_consumptions)
         if page is not None:
