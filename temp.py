@@ -37,11 +37,10 @@ def make_invoices(user_id):
     month_unit = (Consumption.objects.filter(meter__profile__user_id=user_id)
                                      .annotate(month=TruncMonth('time_stamp'))
                                      .values('month')
-                                     .annotate(c=Sum('units')).order_by())
+                                     .annotate(units=Sum('units')).order_by())
     rate = Subscription.objects.filter(profile__user_id=user_id)[0].rates
-    [Invoice(month=aggregate['month'].month, month_units=aggregate['units']/100,
-             amount=aggregate['units']*rate/100, user_id=user_id)
-     for aggregate in month_unit]
-
+    for aggregate in month_unit:
+        Invoice(month=aggregate['month'].month, month_units=aggregate['units'] / 100,
+                amount=aggregate['units'] * rate / 100, user_id=user_id).save()
 
 make_invoices(2)

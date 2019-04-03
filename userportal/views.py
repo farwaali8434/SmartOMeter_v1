@@ -23,6 +23,9 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     queryset = models.Invoice.objects.all()
     serializer_class = serializers.InvoiceSerializer
 
+    def get_queryset(self):
+        return models.Invoice.objects.filter(user=self.request.user)
+
 
 class ConsumptionPagination(PageNumberPagination):
     page_size = 744

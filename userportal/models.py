@@ -140,6 +140,11 @@ class Profile(models.Model):
     meter = models.ForeignKey(Meter, on_delete=models.CASCADE, null=True)
     subscription = models.ForeignKey(Subscription, on_delete=models.CASCADE, null=True)
 
+
+    @property
+    def invoices(self):
+        return self.user.invoice_set.all()
+
     def __str__(self):
         return self.user.username
 

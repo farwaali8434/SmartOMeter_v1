@@ -3,6 +3,13 @@ from rest_framework import serializers
 from userportal import models
 
 
+class InvoiceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Invoice
+        fields = ('id', 'month', 'amount', 'month_units', 'issue_date', 'due_date', 'paid')
+
+
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.City
@@ -35,10 +42,11 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     meter = MeterSerializer()
     subscription = SubscriptionSerializer()
+    invoices = InvoiceSerializer(many=True)
 
     class Meta:
         model = models.Profile
-        fields = ('user', 'cnic', 'phone_num', 'street', 'meter', 'subscription')
+        fields = ('user', 'cnic', 'phone_num', 'street', 'meter', 'subscription', 'invoices')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -94,10 +102,3 @@ class ConsumptionSerializer(serializers.ModelSerializer):
         model = models.Consumption
         fields = ('id', 'units', 'time_stamp', 'meter')
 
-
-class InvoiceSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
-
-    class Meta:
-        model = models.Invoice
-        fields = ('month', 'amount', 'reading_date', 'issue_date', 'due_date', 'paid', 'user')
