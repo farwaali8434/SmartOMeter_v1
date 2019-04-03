@@ -124,7 +124,7 @@ class Announcement(models.Model):
 
 class Consumption(models.Model):
     time_stamp = models.DateTimeField(auto_now_add=True)
-    units = models.FloatField()
+    units = models.PositiveIntegerField()
     meter = models.ForeignKey(Meter, on_delete=models.CASCADE)
     temperature = models.FloatField()
 
