@@ -34,6 +34,10 @@ def consumption_sum(year):
 
 
 def make_invoices(user_id):
+    from django.db.models import Sum
+    from django.db.models.functions import TruncMonth
+
+    from userportal.models import Consumption, Invoice, Subscription
     month_unit = (Consumption.objects.filter(meter__profile__user_id=user_id)
                                      .annotate(month=TruncMonth('time_stamp'))
                                      .values('month')
