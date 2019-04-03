@@ -7,6 +7,6 @@ urlpatterns = [
     path('', dashboard, name='dashboard'),
     path('', include('django.contrib.auth.urls')),
     path('profile/', profile, name='profile'),
-    path('chat/', index1, name='index1'),
+    path('chat/', index, name='index1'),
     re_path(r'^(?P<room_name>[^/]+)/$', room, name='room'),
 ]

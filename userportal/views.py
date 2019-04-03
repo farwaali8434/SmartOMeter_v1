@@ -162,8 +162,8 @@ def profile(request):
     return render(request, "registration/profile.html", context)
 
 
-def index1(request):
-    return render(request, 'userportal/index1.html', {})
+def index(request):
+    return render(request, 'userportal/index.html', {})
 
 
 @login_required
