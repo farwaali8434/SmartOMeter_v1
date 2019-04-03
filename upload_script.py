@@ -404,17 +404,6 @@ def upload_consumptions_NCENT():
         int(x['hour'])),
                                     axis=1)
 
-    temperature = data["tempc"].replace([-9999], numpy.nan)
-    temperature.ffill(inplace=True)
-    temperature_predictions = add_noise(temperature, std=2.5)
-    data["temp_n"] = zscore(temperature_predictions)
-    data['temp_n^2'] = data["temp_n"] ** 2
-
-    data["load_n"] = zscore(data["load"])
-    data["load_prev_n"] = data["load_n"].shift(24)
-    data["load_prev_n"].bfill(inplace=True)
-    data["years_n"] = zscore(data["year"])
-
     today = datetime.today()
     for index, row in data.iterrows():
         if row['time_stamp'].year == 2019:
