@@ -123,16 +123,20 @@ class PaymentsAPI(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         token = request.data['stripe_token']
+        invoice_id = request.data['invoiceId']
+        invoice = Invoice.objects.filter(id=invoice_id)[0]
         try:
             stripe.Charge.create(
-                amount=13000,
+                amount=int(invoice.amount),
                 currency='PKR',
-                description='random',
+                description=invoice.issue_date,
                 card=token
             )
         except stripe.error.CardError as e:
             body = e.json_body
-            Response({'errors': body.get('error', {})}, status=400)
+            return Response({'errors': body.get('error', {})}, status=400)
+        invoice.paid = True
+        invoice.save()
         return Response({"status": "complete"}, status=200)
 
 
