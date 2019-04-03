@@ -16,7 +16,7 @@ DATA = {
       "is_superuser": 1,
       "username": "admin1",
       "first_name": "",
-      "email": "wadoodislam@gmails.com",
+      "email": "farwaali.me@gmail.com",
       "is_staff": 1,
       "is_active": 1,
       "date_joined": "2019-03-30 12:15:45.809235",
