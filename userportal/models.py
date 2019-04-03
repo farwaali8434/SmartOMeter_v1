@@ -148,7 +148,7 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
-User = get_user_model()
+
 
 class Chat(models.Model):
     author = models.ForeignKey(User, related_name='author_message',on_delete=models.CASCADE)
