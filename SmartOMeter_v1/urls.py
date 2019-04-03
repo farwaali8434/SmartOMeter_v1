@@ -20,6 +20,7 @@ from rest_framework import routers
 from userportal.views import *
 from .views import login, user
 
+
 router = routers.DefaultRouter()
 
 router.register(r'tickets', TicketViewSet)
@@ -37,8 +38,7 @@ urlpatterns = [
     url(r'^api/login', login),
     url(r'^api/user', user),
     url(r'^api/charge', PaymentsAPI.as_view()),
-
-    path('', include('userportal.urls'))
+    path('', include('userportal.urls')),
 ]
 
 # Permissions = {

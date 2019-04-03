@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.contrib.auth import get_user_model
 ID_LENGTH = 15
 DEFAULT_RATE = 10
 DEFAULT_BILL = 300
@@ -147,6 +148,18 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+User = get_user_model()
+
+class Chat(models.Model):
+    author = models.ForeignKey(User, related_name='author_message',on_delete=models.CASCADE)
+    content = models.TextField(null=True)
+    timestamp1 = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.author.username
+
+    def last_10_msgs(self):
+        return Chat.objects.order_by('-timestamp1').all()[:10]
 
 
 class Temperary(models.Model):
