@@ -147,7 +147,7 @@ class PaymentsAPI(generics.CreateAPIView):
 @login_required
 def dashboard(request):
     context = {
-        'username': 'wadood',
+        'username': request.user.username,
         'year': consumption_sum(2018),
         'open_tickets': tickets(status=['O'])
     }
@@ -157,7 +157,7 @@ def dashboard(request):
 @login_required
 def profile(request):
     context = {
-        'username': 'wadood'
+        'username': request.user.username
     }
     return render(request, "registration/profile.html", context)
 

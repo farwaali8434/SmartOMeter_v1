@@ -10,19 +10,6 @@ DATA = {
   "auth_user_user_permissions": [],
   "auth_user": [
     {
-      "id": 1,
-      "password": "pbkdf2_sha256$120000$R5cuVjGyTIaU$STn60PvTlfFnmDKMIZe1r8sOAejFJ9kw2YGa0gnXBR0=",
-      "last_login": 'None',
-      "is_superuser": 1,
-      "username": "admin1",
-      "first_name": "",
-      "email": "farwaali.me@gmail.com",
-      "is_staff": 1,
-      "is_active": 1,
-      "date_joined": "2019-03-30 12:15:45.809235",
-      "last_name": ""
-    },
-    {
       "id": 2,
       "password": "pbkdf2_sha256$120000$YPBZSzucEcNI$OfnkP2t8RV+IUOo3fT6ORE7PW/XayUoAam/+Kq6Lhvg=",
       "last_login": "None",
@@ -200,16 +187,6 @@ DATA = {
   ],
   "userportal_ticket": [],
   "userportal_profile": [
-    {
-      "id": 1,
-      "cnic": 'None',
-      "phone_num": 'None',
-      "street": 'None',
-      "area_id": 'None',
-      "meter_id": 'None',
-      "subscription_id": 'None',
-      "user_id": 1
-    },
     {
       "id": 2,
       "cnic": 12345678901,
