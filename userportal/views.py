@@ -143,7 +143,6 @@ class PaymentsAPI(generics.CreateAPIView):
         return Response({"status": "complete"}, status=200)
 
 
-
 @login_required
 def dashboard(request):
     context = {

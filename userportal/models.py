@@ -151,7 +151,7 @@ class Profile(models.Model):
 
 
 class Chat(models.Model):
-    author = models.ForeignKey(User, related_name='author_message',on_delete=models.CASCADE)
+    author = models.ForeignKey(User, related_name='author_message', on_delete=models.CASCADE)
     content = models.TextField(null=True)
     timestamp1 = models.DateTimeField(auto_now_add=True)
 
