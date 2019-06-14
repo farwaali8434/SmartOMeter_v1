@@ -102,3 +102,25 @@ class ConsumptionSerializer(serializers.ModelSerializer):
         model = models.Consumption
         fields = ('id', 'units', 'time_stamp', 'meter')
 
+
+class MeterContextSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Meter
+        fields = ('id', 'meter_num', 'street')
+
+
+class AreaContextSerializer(serializers.ModelSerializer):
+    meters = MeterContextSerializer(many=True)
+
+    class Meta:
+        model = models.Area
+        fields = ('id', 'area_name', 'meters')
+
+
+class CityContextSerializer(serializers.ModelSerializer):
+    areas = AreaContextSerializer(many=True)
+
+    class Meta:
+        model = models.City
+        fields = ('id', 'city_name', 'areas')

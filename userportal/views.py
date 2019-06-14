@@ -1,12 +1,15 @@
 import datetime
-
+import json
 import pandas as pd
+
 from django.contrib.auth.decorators import login_required
+from django.db.models import Case, When, F, IntegerField, Sum, DecimalField, Value
 from rest_framework import viewsets, generics
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from django.shortcuts import render
+from django.db.models.functions import Extract
 import stripe
 from django.shortcuts import render
 from SmartOMeter_v1 import settings
@@ -15,8 +18,6 @@ from userportal.helpers import *
 from userportal import models
 from userportal import serializers
 from django.utils.safestring import mark_safe
-import json
-from django.contrib.auth.decorators import login_required
 
 
 class InvoiceViewSet(viewsets.ModelViewSet):
@@ -61,7 +62,7 @@ class ConsumptionViewSet(viewsets.ModelViewSet):
                      'temp_n': [], 'temp_n^2': [], 'years_n': [], 'load_prev_n': []}
 
     @action(methods=['get'], detail=False)
-    def predictions(self, request, *args, **kwargs):
+    def predictions(self, request):
         past_consumptions = [c for c in self.get_queryset()]
         forecaster = Forecaster('load_forecaster/checkpoint/forecaster.h5')
         today = datetime.datetime.now()
@@ -94,6 +95,37 @@ class ConsumptionViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(past_consumptions, many=True)
         return Response(serializer.data)
+
+    @action(methods=['GET'], detail=False)
+    def summarize(self, request):
+        today = datetime.datetime.now()
+        span = request.query_params['span']
+        span_id = request.query_params['span_id']
+        month = request.query_params.get('month')
+
+        if month:
+            period = 'day'
+            query_set = models.Consumption.objects.filter(
+                time_stamp__year=today.year,
+                time_stamp__month=month
+            )
+        else:
+            period = 'month'
+            query_set = models.Consumption.objects.filter(
+                time_stamp__year=today.year
+            )
+
+        if span == 'city':
+            query_set = query_set.filter(meter__area__city_id=span_id)
+        elif span == 'area':
+            query_set = query_set.filter(meter__area_id=span_id)
+
+        summary = list(
+            query_set.annotate(**{
+                period: Extract('time_stamp', period)
+            }).values(period).annotate(load=Sum('units'))
+        )
+        return Response(summary)
 
 
 class TicketViewSet(viewsets.ModelViewSet):
@@ -145,10 +177,12 @@ class PaymentsAPI(generics.CreateAPIView):
 
 @login_required
 def dashboard(request):
+    serializer = CityContextSerializer(City.objects.all(), many=True)
     context = {
         'username': request.user.username,
         'year': consumption_sum(2018),
-        'open_tickets': tickets(status=['O'])
+        'open_tickets': tickets(status=['O']),
+        'json_conifg': json.dumps(serializer.data)
     }
     return render(request, "dashboard.html", context)
 

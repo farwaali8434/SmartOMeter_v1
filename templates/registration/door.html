@@ -13,10 +13,17 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="hold-transition login-page">
-    {% block content %}
+    <div class="login-wrapper">
+        {% block content %}
 
-    {% endblock content %}
-
+        {% endblock content %}
+    </div>
+    <footer class="main-footer login-footer">
+            <div class="pull-right hidden-xs">
+                <b>Version</b> 2.4.0
+            </div>
+            <strong>Copyright &copy; 2018-2019 <a href="#">SoftCreed Solutions</a>.</strong> All rights reserved.
+    </footer>
     <script src="{% static 'js/jquery.min.js'%}"></script>
     <script src="{% static 'css/bootstrap/dist/js/bootstrap.min.js'%} "></script>
     <script src="{% static 'js/iCheck/icheck.min.js' %} "></script>

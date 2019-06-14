@@ -3,6 +3,8 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
+
+
 ID_LENGTH = 15
 DEFAULT_RATE = 10
 DEFAULT_BILL = 300
@@ -67,7 +69,7 @@ class City(models.Model):
 class Area(models.Model):
     area_name = models.CharField(max_length=SHORT_LENGTH)
     division = models.CharField(max_length=SHORT_LENGTH)
-    city = models.ForeignKey(City, on_delete=models.CASCADE)
+    city = models.ForeignKey(City, related_name="areas", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.area_name
@@ -76,7 +78,7 @@ class Area(models.Model):
 class Meter(models.Model):
     street = models.CharField(max_length=MEDIUM_LENGTH)
     meter_num = models.IntegerField()
-    area = models.ForeignKey(Area, on_delete=models.CASCADE)
+    area = models.ForeignKey(Area, related_name='meters', on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.meter_num)
@@ -125,7 +127,7 @@ class Announcement(models.Model):
 class Consumption(models.Model):
     time_stamp = models.DateTimeField(auto_now_add=True)
     units = models.PositiveIntegerField()
-    meter = models.ForeignKey(Meter, on_delete=models.CASCADE)
+    meter = models.ForeignKey(Meter, related_name='consumptions', on_delete=models.CASCADE)
     temperature = models.FloatField()
 
     def __str__(self):
