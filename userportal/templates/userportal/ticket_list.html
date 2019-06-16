@@ -26,27 +26,28 @@
                     <tbody>
                         <tr>
                           <th>ID</th>
-                          <th>Customer</th>
+                          <th>Subject</th>
                           <th>Status</th>
-                          <th>Issue Date</th>
-                          <th>Due Date</th>
-                          <th>Ammont</th>
+                          <th>Created By</th>
+                          <th>Opened Date</th>
+                          <th>Close Date</th>
                         </tr>
-                        {% for invoice in invoice_list %}
+                        {% for ticket in ticket_list %}
                             <tr>
-                                <td><a href="#">{{ invoice.id }}</a></td>
-                                <td>{{ invoice.created_by.first_name }} {{ invoice.created_by.last_name}}</td>
-                                {% if invoice.paid %}
-                                    <td><span class="label label-primary">Paid</span></td>
-                                {% else %}
-                                    <td><span class="label label-warning">Pending</span></td>
+                                <td><a href="#">{{ ticket.id }}</a></td>
+                                <td>{{ ticket.subject }}</td>
+                                {% if ticket.status == 'O' %}
+                                    <td><span class="label label-primary">Opened</span></td>
+                                {% elif ticket.status == 'E' %}
+                                    <td><span class="label label-warning">Escalated</span></td>
+                                {% elif ticket.status == 'C' %}
+                                    <td><span class="label label-danger">Closed</span></td>
                                 {% endif %}
-                                <td>{{ invoice.issue_date|date }}</td>
-                                <td>{{ invoice.due_date|date }}</td>
-                                <td><strong>Rs. {{ invoice.amount }} /-</strong></td>
+                                <td>{{ ticket.created_by.first_name }} {{ ticket.created_by.last_name}}</td>
+                                <td>{{ ticket.date_opened|date }}</td>
+                                <td>{{ ticket.date_closed|date }}</td>
                             </tr>
                         {% endfor %}
-
                     </tbody>
                   </table>
                 </div>

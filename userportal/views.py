@@ -245,3 +245,11 @@ class InvoiceListView(LoginRequiredMixin, ListView):
 
 class InvoiceDetailView(LoginRequiredMixin, DetailView):
     model = Invoice
+
+
+class TicketListView(LoginRequiredMixin, ListView):
+    model = Ticket
+
+
+class TicketDetailView(LoginRequiredMixin, DetailView):
+    model = Ticket
