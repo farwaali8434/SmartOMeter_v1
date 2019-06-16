@@ -3,7 +3,9 @@ import json
 import pandas as pd
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Case, When, F, IntegerField, Sum, DecimalField, Value
+from django.views.generic import ListView, DetailView
 from rest_framework import viewsets, generics
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
@@ -56,9 +58,12 @@ class ConsumptionViewSet(viewsets.ModelViewSet):
     hour_labels = [("h" + str(i)) for i in range(24)]
     month_labels = [("m" + str(i)) for i in range(1, 12 + 1)]
     input_columns = {'MON': [], 'TUE': [], 'WED': [], 'THU': [], 'FRI': [], 'SAT': [], 'SUN': [],
-                     'h0': [], 'h1': [], 'h2': [], 'h3': [], 'h4': [], 'h5': [], 'h6': [], 'h7': [], 'h8': [], 'h9': [], 'h10': [], 'h11': [],
-                     'h12': [], 'h13': [], 'h14': [], 'h15': [], 'h16': [], 'h17': [], 'h18': [], 'h19': [], 'h20': [], 'h21': [], 'h22': [], 'h23': [],
-                     'm1': [], 'm2': [], 'm3': [], 'm4': [], 'm5': [], 'm6': [], 'm7': [], 'm8': [], 'm9': [], 'm10': [], 'm11': [], 'm12': [],
+                     'h0': [], 'h1': [], 'h2': [], 'h3': [], 'h4': [], 'h5': [], 'h6': [], 'h7': [], 'h8': [], 'h9': [],
+                     'h10': [], 'h11': [],
+                     'h12': [], 'h13': [], 'h14': [], 'h15': [], 'h16': [], 'h17': [], 'h18': [], 'h19': [], 'h20': [],
+                     'h21': [], 'h22': [], 'h23': [],
+                     'm1': [], 'm2': [], 'm3': [], 'm4': [], 'm5': [], 'm6': [], 'm7': [], 'm8': [], 'm9': [],
+                     'm10': [], 'm11': [], 'm12': [],
                      'temp_n': [], 'temp_n^2': [], 'years_n': [], 'load_prev_n': []}
 
     @action(methods=['get'], detail=False)
@@ -69,6 +74,7 @@ class ConsumptionViewSet(viewsets.ModelViewSet):
         future_inputs = Temperary.objects.filter(time_stamp__month=today.month,
                                                  time_stamp__gt=past_consumptions[-1].time_stamp)
         future_tensors = self.input_columns.copy()
+
         for fi in future_inputs:
             for index, week_day in enumerate(self.day_labels):
                 future_tensors[week_day].append(1 if fi.time_stamp.weekday() == index else 0)
@@ -127,6 +133,33 @@ class ConsumptionViewSet(viewsets.ModelViewSet):
         )
         return Response(summary)
 
+    @action(methods=['GET'], detail=False)
+    def compare(self, request):
+        today = datetime.datetime.now()
+        span = request.query_params['span']
+        span_ids = [int(x) for x in request.query_params['span_ids'].split(',') if x != '']
+        months = [int(x) for x in request.query_params['months'].split(',') if x != '']
+
+        if months:
+            query_set = models.Consumption.objects.filter(
+                time_stamp__year=today.year,
+                time_stamp__month__in=months
+            )
+        else:
+            query_set = models.Consumption.objects.filter(
+                time_stamp__year=today.year
+            )
+
+        if span == 'city':
+            query_set = query_set.filter(meter__area__city_id__in=span_ids)
+        elif span == 'area':
+            query_set = query_set.filter(meter__area_id__in=span_ids)
+
+        comparison = list(query_set.annotate(
+            span=F(f'meter__area{"__city__city_name" if span == "city" else "__area_name"}')
+        ).values('span').annotate(load=Sum('units')))
+        return Response(comparison)
+
 
 class TicketViewSet(viewsets.ModelViewSet):
     """
@@ -180,8 +213,7 @@ def dashboard(request):
     serializer = CityContextSerializer(City.objects.all(), many=True)
     context = {
         'username': request.user.username,
-        'year': consumption_sum(2018),
-        'open_tickets': tickets(status=['O']),
+        'open_tickets_count': tickets(['O'], True),
         'json_conifg': json.dumps(serializer.data)
     }
     return render(request, "dashboard.html", context)
@@ -205,3 +237,11 @@ def room(request, room_name):
         'room_name_json': mark_safe(json.dumps(room_name)),
         'username': mark_safe(json.dumps(request.user.username)),
     })
+
+
+class InvoiceListView(LoginRequiredMixin, ListView):
+    model = Invoice
+
+
+class InvoiceDetailView(LoginRequiredMixin, DetailView):
+    model = Invoice

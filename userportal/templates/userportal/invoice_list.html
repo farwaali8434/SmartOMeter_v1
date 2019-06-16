@@ -1,0 +1,63 @@
+{% extends 'master.html' %}
+{% load static %}
+
+{% block styles %}
+{% endblock styles %}
+
+{% block content %}
+    <div class="content">
+        <div class="row">
+            <div class="col-xs-12">
+              <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title">Pending Invoices</h3>
+                  <div class="box-tools">
+                    <div class="input-group input-group-sm" style="width: 150px;">
+                      <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+                      <div class="input-group-btn">
+                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                  <table class="table table-hover">
+                    <tbody>
+                        <tr>
+                          <th>ID</th>
+                          <th>Customer</th>
+                          <th>Status</th>
+                          <th>Issue Date</th>
+                          <th>Due Date</th>
+                          <th>Ammont</th>
+                        </tr>
+                        {% for invoice in invoice_list %}
+                            <tr>
+                                <td>{{ invoice.id }}</td>
+                                <td>{{ invoice.user.username }}</td>
+                                {% if invoice.paid %}
+                                    <td><span class="label label-primary">Paid</span></td>
+                                {% else %}
+                                    <td><span class="label label-warning">Pending</span></td>
+                                {% endif %}
+                                <td>{{ invoice.issue_date|date }}</td>
+                                <td>{{ invoice.due_date|date }}</td>
+                                <td><strong>Rs. {{ invoice.amount }} /-</strong></td>
+                            </tr>
+                        {% endfor %}
+
+                    </tbody>
+                  </table>
+                </div>
+                <!-- /.box-body -->
+              </div>
+              <!-- /.box -->
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+
+{% block script %}
+{% endblock script %}

@@ -31,7 +31,9 @@ def consumption_sum(year):
     return year_sum
 
 
-def tickets(status=('O', 'E', 'C')):
-    return [TicketSerializer(t).data for t in Ticket.objects.filter(status__in=status)]
+def tickets(status=('O', 'E', 'C'), count=False):
+    query_set = Ticket.objects.filter(status__in=status)
+    return query_set.count() if count else TicketSerializer(query_set, many=True).data
+
 
 

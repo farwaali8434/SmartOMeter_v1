@@ -9,10 +9,72 @@
 
 {% block content %}
     <div class="content">
+        <div class="row">
+            <div class="col-lg-3 col-xs-6">
+              <!-- small box -->
+              <div class="small-box bg-aqua">
+                <div class="inner">
+                  <h3>{{ open_tickets_count }}</h3>
+
+                  <p>Open Tickets</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-alert-circled"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+              <!-- small box -->
+              <div class="small-box bg-green">
+                <div class="inner">
+                  <h3>53<sup style="font-size: 20px">%</sup></h3>
+
+                  <p>Bounce Rate</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+              <!-- small box -->
+              <div class="small-box bg-yellow">
+                <div class="inner">
+                  <h3>44</h3>
+
+                  <p>User Registrations</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-person-add"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+              <!-- small box -->
+              <div class="small-box bg-red">
+                <div class="inner">
+                  <h3>65</h3>
+
+                  <p>Unique Visitors</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-pie-graph"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+        </div>
         <div class="box box-success">
             <div class="box-header ui-sortable-handle" style="cursor: move;">
                 <i class="ion ion-stats-bars"></i>
-                <h3 class="box-title">Dashboard</h3>
+                <h3 class="box-title">Consumption Summary</h3>
                 <button type="button" class="btn btn-box-tool pull-right" data-widget="collapse"><i class="fa fa-minus"></i>
                 </button>
             </div>
@@ -20,10 +82,10 @@
                 <div class="form-group col-xs-6">
                     <label class="col-xs-4">Span:</label>
                     <div class="col-xs-4">
-                      <input type="radio" name="span" checked value="area"> Areas
+                      <input type="radio" name="span" checked value="area"> Area
                     </div>
                     <div class="col-xs-4">
-                      <input type="radio" name="span" value="city"> Cities
+                      <input type="radio" name="span" value="city"> City
                     </div>
                 </div>
                 <div class="form-group col-xs-6">
@@ -71,104 +133,84 @@
                 </div>
             </div>
             <div class="box-body">
-                <div class="chart">
-                    <canvas id="barChart" style="height:230px"></canvas>
+                <div class="col-xs-8">
+                    <canvas id="summaryBarChart" style="height:230px"></canvas>
+                </div>
+                <div class="col-xs-4">
+                    <canvas id="summaryPieChart" style="height:230px"></canvas>
                 </div>
             </div>
-
         </div>
-        <div class="row">
-            <div class="col-md-3 col-sm-6 col-xs-12">
-              <div class="info-box">
-                <span class="info-box-icon bg-aqua">
-                    <i class="ion ion-ios-gear-outline"></i>
-                </span>
-                <div class="info-box-content">
-                  <span class="info-box-text">Pending Tickets</span>
-                  <span class="info-box-number">{{ open_tickets|length }}</span>
-                </div>
-                <!-- /.info-box-content -->
-              </div>
-              <!-- /.info-box -->
-            </div>
-            <!-- /.col -->
-        </div>
-          <div class="row">
-        <div class="col-md-6">
-          <!-- AREA CHART -->
-          <div class="box box-primary">
-            <div class="box-header with-border">
-              <h3 class="box-title">Area Chart</h3>
-
-              <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+        <div class="box box-success">
+            <div class="box-header ui-sortable-handle" style="cursor: move;">
+                <i class="ion ion-stats-bars"></i>
+                <h3 class="box-title">Consumption Comparison</h3>
+                <button type="button" class="btn btn-box-tool pull-right" data-widget="collapse"><i class="fa fa-minus"></i>
                 </button>
-                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-              </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-6">
+                    <label class="col-xs-4">Span:</label>
+                    <div class="col-xs-4">
+                      <input type="radio" name="comparison_span" checked value="areas"> Areas
+                    </div>
+                    <div class="col-xs-4">
+                      <input type="radio" name="comparison_span" value="cities"> Cities
+                    </div>
+                </div>
+                <div class="form-group col-xs-6">
+                    <label class="col-xs-4">Periodicity:</label>
+                    <div class="col-xs-4">
+                      <input type="radio" name="comparison_periodicity" checked value="yearly"> Yearly
+                    </div>
+                    <div class="col-xs-4">
+                      <input type="radio" name="comparison_periodicity" value="monthly"> Monthly
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="col-xs-4">
+                        <div class="form-group" >
+                            <label id="comparison_span_label">Cities</label>
+                            <select class="form-control" multiple id="comparison_span_select" style="width: 100%;">
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6" id="comparison_periodicity">
+                    <div class="col-xs-4">
+                        <div class="form-group" >
+                            <label id="comparison_periodicity_label">Months</label>
+                            <select class="form-control" multiple id="comparison_month_select" disabled style="width: 100%;">
+                                <option value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="box-body">
-              <div class="chart">
-                <canvas id="areaChart" style="height:250px"></canvas>
-              </div>
-            </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
-
-          <!-- DONUT CHART -->
-           <div class="box box-success">
-            <div class="box-header with-border">
-              <h3 class="box-title">Bar Chart</h3>
-
-              <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                </button>
-                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-              </div>
-            </div>
-            <div class="box-body">
-
-
-            </div>
-            <!-- /.box-body -->
-          </div>
-
-        </div>
-        <!-- /.col (LEFT) -->
-        <div class="col-md-6">
-            <div class="box box-danger">
-            <div class="box-header with-border">
-              <h3 class="box-title">Donut Chart</h3>
-
-              <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                </button>
-                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-              </div>
-            </div>
-            <div class="box-body">
-                <div class="col-md-8">
-                    <canvas id="pieChart"  style="height:230px"></canvas>
+                <div class="col-xs-8">
+                    <canvas id="comparisonBarChart" style="height:230px"></canvas>
                 </div>
-                <div class="col-md-4">
-                  <ul class="chart-legend clearfix">
-                    <li><i class="fa fa-circle-o text-red"></i> Punjab</li>
-                    <li><i class="fa fa-circle-o text-green"></i> Sindh</li>
-                    <li><i class="fa fa-circle-o text-yellow"></i> Blochistan</li>
-                    <li><i class="fa fa-circle-o text-aqua"></i> KPK</li>
-                    <li><i class="fa fa-circle-o text-light-blue"></i> Islamabad</li>
-                  </ul>
+                <div class="col-xs-4">
+                    <canvas id="comparisonPieChart" style="height:230px"></canvas>
                 </div>
             </div>
 
-            <!-- /.box-body -->
-          </div>
-          <!-- BAR CHART -->
-
-          <!-- /.box -->
-
-        </div>
-        <!-- /.col (RIGHT) -->
         </div>
     </div>
 
@@ -179,7 +221,6 @@
 {% block script %}
     <script src="{% static 'js/iCheck/icheck.min.js' %}"></script>
     <script>
-
     const jsonConfig = {{ json_conifg|safe }};
     const monthNames = [
         'January',
@@ -195,8 +236,6 @@
         'November',
         'December'
     ];
-    $('#span_label').text("Area").val('area');
-    $('#span_select').empty().html(jsonConfig.reduce(area_selector, ''));
 
     function city_selector(html, city){
         return html + "<option " + (!city.areas.length?"disabled=\"disabled\"":"") +
@@ -212,14 +251,77 @@
         return html + (city.areas.length? "<optgroup label=\"" + city.city_name + "\">\n" +
             city.areas.reduce(area_options, '') + "</optgroup>" : null);
     }
+    </script>
+    <script>
+    $('#span_label').text("Area").val('area');
+    $('#span_select').empty().html(jsonConfig.reduce(area_selector, ''));
+    $('#month_select, #span_select').on('change', renderSummaryCharts);
+    $(renderSummaryCharts);
 
-    let barChartData = {
+    function renderSummaryCharts() {
+        let periodicity = $('#periodicity_label').val();
+        if (!periodicity) periodicity = "monthly";
+        let span = $('#span_label, #span_select').val();
+        let spanId = $('#span_select').val();
+        let month = $('#month_select').val();
+
+        let summaryParams = `?span=${span}&span_id=${spanId}`;
+        if (periodicity==='daily') summaryParams += `&month=${month}`;
+        $.get(`/api/consumptions/summarize${summaryParams}`,{
+            headers: {
+                Authorization: 'Token 59634c196f1be3389f4718c20b137d22d6c248b7'
+            }
+        }).then(data => {
+            let newLabels = periodicity==='daily'? data.map((v,i)=>`${i+1}/${month}`): monthNames;
+            let newData = data.map(item=>item.load);
+
+            summaryPieChart.data.labels = newLabels;
+            summaryPieChart.data.datasets[0].data = newData;
+
+            summaryBarChart.data.labels = newLabels;
+            summaryBarChart.data.datasets[0].data = newData;
+
+            summaryPieChart.update();
+            summaryBarChart.update();
+        })
+    }
+
+    $('input[name="span"]').iCheck({
+        radioClass: 'iradio_flat-green'
+    }).on('ifChecked', event => {
+        let span = event.target.value;
+        let select_options;
+        if(span==="city"){
+            select_options = jsonConfig.reduce(city_selector, '');
+            $('#span_label').text("City").val(span)
+        }
+        else if(span==="area")
+        {
+            select_options = jsonConfig.reduce(area_selector, '');
+            $('#span_label').text("Area").val(span)
+        }
+
+        $('#span_select').empty().html(select_options);
+        renderSummaryCharts();
+    });
+
+    $('input[name="periodicity"]').iCheck({
+        radioClass: 'iradio_flat-green'
+    }).on('ifChecked', event => {
+        $('#month_select').prop('disabled', (i, v) => !v);
+        $('#periodicity_label').val(event.target.value);
+        renderSummaryCharts();
+    });
+
+    let summaryBarChartOptions = {
         type: 'bar',
         data: {
             labels: monthNames,
             datasets: [
                 {
-                    label: 'Consumptions',
+                    label: 'Consumptions (Kwh)',
+                    backgroundColor: '#00a65a',
+                    borderColor: '#00a65a',
                     fillColor: '#00a65a',
                     strokeColor: '#00a65a',
                     pointColor: '#00a65a',
@@ -258,56 +360,230 @@
           maintainAspectRatio     : true
         }
     };
-    let barChart = new Chart($('#barChart'), barChartData);
+    let summaryBarChart = new Chart($('#summaryBarChart'), summaryBarChartOptions);
 
-    function showBarChart() {
-        let periodicity = $('#periodicity_label').val();
+    let summaryPieChartOptions = {
+        type: 'pie',
+        data: {
+            labels: monthNames,
+            datasets: [{
+                label: 'Consumptions (Kwh)',
+                backgroundColor: [
+                    'rgba(255,102,255,1)',
+                    'rgba(0,255,255,1)',
+                    'rgba(255,255,0,1)',
+                    'rgba(187,176,243,1)',
+                    'rgba(255,0,255,1)',
+                    'rgba(140,160,167,1)',
+                    'rgba(243,120,180,1)',
+                    'rgba(124,223,134,1)',
+                    'rgba(123,245,123,1)',
+                    'rgba(243,132,243,1)',
+                    'rgba(165,221,156,1)',
+                    'rgba(134,197,123,1)'
+                ],
+                borderColor: '#00a65a',
+                data: []
+            }],
+        },
+        options:  {
+          //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
+          scaleBeginAtZero        : true,
+          //Boolean - Whether grid lines are shown across the chart
+          scaleShowGridLines      : true,
+          //String - Colour of the grid lines
+          scaleGridLineColor      : 'rgba(0,0,0,.05)',
+          //Number - Width of the grid lines
+          scaleGridLineWidth      : 1,
+          //Boolean - Whether to show horizontal lines (except X axis)
+          scaleShowHorizontalLines: true,
+          //Boolean - Whether to show vertical lines (except Y axis)
+          scaleShowVerticalLines  : true,
+          //Boolean - If there is a stroke on each bar
+          barShowStroke           : true,
+          //Number - Pixel width of the bar stroke
+          barStrokeWidth          : 2,
+          //Number - Spacing between each of the X value sets
+          barValueSpacing         : 5,
+          //Number - Spacing between data sets within X values
+          barDatasetSpacing       : 1,
+          //String - A legend template
+          legendTemplate          : '<ul class="<%=name.toLowerCase()%>-legend"><% for (var i=0; i<datasets.length; i++){\\%><li><span style="background-color:<%=datasets[i].fillColor%>"></span><%if(datasets[i].label){\\%><%=datasets[i].label%><%}%></li><%}%></ul>',
+          //Boolean - whether to make the chart responsive
+          responsive              : true,
+          maintainAspectRatio     : true
+        }
+    };
+    let summaryPieChart = new Chart($('#summaryPieChart'), summaryPieChartOptions);
+    </script>
+    <script>
+
+    $('#comparison_span_label').text("Areas").val('areas');
+    $('#comparison_span_select').empty().html(jsonConfig.reduce(area_selector, ''));
+    $('#comparison_month_select, #comparison_span_select').on('change', renderComparisonCharts);
+    $(renderComparisonCharts);
+
+    function renderComparisonCharts() {
+        let periodicity = $('#comparison_periodicity_label').val();
         if (!periodicity) periodicity = "monthly";
-        let span = $('#span_label, #span_select').val();
-        let spanId = $('#span_select').val();
-        let month = $('#month_select').val();
-
-        let summaryParams = `?span=${span}&span_id=${spanId}`;
-        if (periodicity==='daily') summaryParams += `&month=${month}`;
-        $.get(`/api/consumptions/summarize${summaryParams}`,{
+        let span = $('#comparison_span_label, #comparison_span_select').val();
+        let spanIds = $('#comparison_span_select').val();
+        let months = $('#comparison_month_select').val();
+        console.log(periodicity, months)
+        console.log(span, spanIds)
+        let summaryParams = `?span=${span}&span_ids=${spanIds}`;
+        if (periodicity==='monthly') summaryParams += `&months=${months}`;
+        $.get(`/api/consumptions/compare${summaryParams}`,{
             headers: {
                 Authorization: 'Token 59634c196f1be3389f4718c20b137d22d6c248b7'
             }
         }).then(data => {
-            barChart.data.labels = periodicity==='daily'? data.map((v,i)=>`${i+1}/${month}`): monthNames;
-            barChart.data.datasets[0].data = data.map(item=>item.load);
-            barChart.update();
+            let newLabels = data.map(item=>item.span);
+            let newData = data.map(item=>item.load);
+
+            comparisonPieChart.data.labels = newLabels;
+            comparisonPieChart.data.datasets[0].data = newData;
+
+            comparisonBarChart.data.labels = newLabels;
+            comparisonBarChart.data.datasets[0].data = newData;
+
+            comparisonPieChart.update();
+            comparisonBarChart.update();
         })
+        let comparisonBarChart = new Chart($('#comparisonBarChart'), comparisonBarChartOptions);
+        let comparisonPieChart = new Chart($('#comparisonPieChart'), comparisonPieChartOptions);
+
+
     }
 
-    $('input[name="span"]').iCheck({
+    $('input[name="comparison_span"]').iCheck({
         radioClass: 'iradio_flat-green'
     }).on('ifChecked', event => {
         let span = event.target.value;
         let select_options;
-        if(span==="city"){
+        if(span==="cities"){
             select_options = jsonConfig.reduce(city_selector, '');
-            $('#span_label').text("City").val(span)
+            $('#comparison_span_label').text("Cities").val(span)
         }
-        else if(span==="area")
+        else if(span==="areas")
         {
             select_options = jsonConfig.reduce(area_selector, '');
-            $('#span_label').text("Area").val(span)
+            $('#comparison_span_label').text("Areas").val(span)
         }
 
-        $('#span_select').empty().html(select_options);
-        showBarChart();
+        $('#comparison_span_select').empty().html(select_options);
+        renderComparisonCharts();
     });
 
-    $('input[name="periodicity"]').iCheck({
+    $('input[name="comparison_periodicity"]').iCheck({
         radioClass: 'iradio_flat-green'
     }).on('ifChecked', event => {
-        $('#month_select').prop('disabled', (i, v) => !v);
-        $('#periodicity_label').val(event.target.value);
-        showBarChart();
+        $('#comparison_month_select').prop('disabled', (i, v) => !v);
+        $('#comparison_periodicity_label').val(event.target.value);
+        renderComparisonCharts();
     });
 
-    $('#month_select, #span_select').on('change', showBarChart);
-    $(showBarChart)
+
+    let comparisonBarChartOptions = {
+        type: 'bar',
+        data: {
+            labels: monthNames,
+            datasets: [
+                {
+                    label: 'Consumptions (Kwh)',
+                    backgroundColor: '#00a65a',
+                    borderColor: '#00a65a',
+                    fillColor: '#00a65a',
+                    strokeColor: '#00a65a',
+                    pointColor: '#00a65a',
+                    pointStrokeColor: 'rgba(60,141,188,1)',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                    data: [65, 59, 80, 81, 56, 55, 49, 59, 80, 81, 56, 55]
+                }
+            ]
+        },
+        options:  {
+          //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
+          scaleBeginAtZero        : true,
+          //Boolean - Whether grid lines are shown across the chart
+          scaleShowGridLines      : true,
+          //String - Colour of the grid lines
+          scaleGridLineColor      : 'rgba(0,0,0,.05)',
+          //Number - Width of the grid lines
+          scaleGridLineWidth      : 1,
+          //Boolean - Whether to show horizontal lines (except X axis)
+          scaleShowHorizontalLines: true,
+          //Boolean - Whether to show vertical lines (except Y axis)
+          scaleShowVerticalLines  : true,
+          //Boolean - If there is a stroke on each bar
+          barShowStroke           : true,
+          //Number - Pixel width of the bar stroke
+          barStrokeWidth          : 2,
+          //Number - Spacing between each of the X value sets
+          barValueSpacing         : 5,
+          //Number - Spacing between data sets within X values
+          barDatasetSpacing       : 1,
+          //String - A legend template
+          legendTemplate          : '<ul class="<%=name.toLowerCase()%>-legend"><% for (var i=0; i<datasets.length; i++){\\%><li><span style="background-color:<%=datasets[i].fillColor%>"></span><%if(datasets[i].label){\\%><%=datasets[i].label%><%}%></li><%}%></ul>',
+          //Boolean - whether to make the chart responsive
+          responsive              : true,
+          maintainAspectRatio     : true
+        }
+    };
+
+    let comparisonPieChartOptions = {
+        type: 'pie',
+        data: {
+            labels: monthNames,
+            datasets: [{
+                label: 'Consumptions (Kwh)',
+                backgroundColor: [
+                    'rgba(255,102,255,1)',
+                    'rgba(0,255,255,1)',
+                    'rgba(255,255,0,1)',
+                    'rgba(187,176,243,1)',
+                    'rgba(255,0,255,1)',
+                    'rgba(140,160,167,1)',
+                    'rgba(243,120,180,1)',
+                    'rgba(124,223,134,1)',
+                    'rgba(123,245,123,1)',
+                    'rgba(243,132,243,1)',
+                    'rgba(165,221,156,1)',
+                    'rgba(134,197,123,1)'
+                ],
+                borderColor: '#00a65a',
+                data: [65, 59, 80, 81, 56, 55, 40, 59, 80, 81, 56, 55]
+            }],
+        },
+        options:  {
+          //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
+          scaleBeginAtZero        : true,
+          //Boolean - Whether grid lines are shown across the chart
+          scaleShowGridLines      : true,
+          //String - Colour of the grid lines
+          scaleGridLineColor      : 'rgba(0,0,0,.05)',
+          //Number - Width of the grid lines
+          scaleGridLineWidth      : 1,
+          //Boolean - Whether to show horizontal lines (except X axis)
+          scaleShowHorizontalLines: true,
+          //Boolean - Whether to show vertical lines (except Y axis)
+          scaleShowVerticalLines  : true,
+          //Boolean - If there is a stroke on each bar
+          barShowStroke           : true,
+          //Number - Pixel width of the bar stroke
+          barStrokeWidth          : 2,
+          //Number - Spacing between each of the X value sets
+          barValueSpacing         : 5,
+          //Number - Spacing between data sets within X values
+          barDatasetSpacing       : 1,
+          //String - A legend template
+          legendTemplate          : '<ul class="<%=name.toLowerCase()%>-legend"><% for (var i=0; i<datasets.length; i++){\\%><li><span style="background-color:<%=datasets[i].fillColor%>"></span><%if(datasets[i].label){\\%><%=datasets[i].label%><%}%></li><%}%></ul>',
+          //Boolean - whether to make the chart responsive
+          responsive              : true,
+          maintainAspectRatio     : true
+        }
+    };
+
     </script>
 {% endblock script %}

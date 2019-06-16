@@ -16,7 +16,7 @@ connection = sqlite3.connect("db.sqlite3")
 
 if "__main__":
     cursor = connection.cursor()
-    data = pd.read_csv('load_forecaster/data/SCENT.csv')
+    data = pd.read_csv('load_forecaster/data/NCENT.csv')
     next_year = []
     for row in data['year']:
         next_year.append(row+1 if row == 2018 else row)
@@ -49,7 +49,7 @@ if "__main__":
 
             if row['time_stamp'] > today:
                 continue
-            values = f"'{row['time_stamp']}', {2}, {row['load']}, {row['tempc']}"
+            values = f"'{row['time_stamp']}', {1}, {row['load']}, {row['tempc']}"
             query = f'INSERT INTO userportal_consumption (time_stamp, meter_id, units, temperature) VALUES ({values})'
             cursor.execute(query)
 
