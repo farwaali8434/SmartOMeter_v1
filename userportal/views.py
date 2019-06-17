@@ -169,7 +169,8 @@ class TicketViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TicketSerializer
 
     def get_queryset(self):
-        return self.request.user.ticket_set.all()
+        user = self.request.user
+        return Ticket.objects.all() if user.is_staff else user.ticket_set.all()
 
 
 class AnnouncementViewSet(viewsets.ModelViewSet):
@@ -232,7 +233,7 @@ def index(request):
 
 
 @login_required
-def room(request, room_name):
+def chat(request, room_name):
     return render(request, 'userportal/room.html', {
         'room_name_json': mark_safe(json.dumps(room_name)),
         'username': mark_safe(json.dumps(request.user.username)),

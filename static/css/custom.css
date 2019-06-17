@@ -5,3 +5,13 @@
 .login-footer{
     margin-left: 0px;
 }
+
+.sm-no-margin-bottom{
+    margin-bottom: 0px;
+}
+
+#sm-chat{
+    position: absolute;
+    right: 20px;
+    bottom: 0px;
+}

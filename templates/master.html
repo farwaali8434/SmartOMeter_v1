@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="{% static 'css/iCheck/green.css'%}">
   <link rel="stylesheet" href="{% static 'css/AdminLTE.min.css'%}">
   <link rel="stylesheet" href="{% static 'css/skins/_all-skins.min.css'%}">
+  <link rel="stylesheet" href="{% static 'css/custom.css'%}">
     {% block styles %}
     {% endblock styles %}
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
@@ -105,8 +106,10 @@
 
     <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-         {% block content %}
-         {% endblock content %}
+            {% block content %}
+            {% endblock content %}
+            <div class="col-md-3" id="sm-chat" >
+            </div>
         </div>
     </div>
     <!-- ./wrapper -->

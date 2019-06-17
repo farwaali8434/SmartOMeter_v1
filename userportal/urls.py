@@ -8,9 +8,9 @@ urlpatterns = [
     path('', include('django.contrib.auth.urls')),
     path('profile/', profile, name='profile'),
     path('invoice/', InvoiceListView.as_view(), name='invoice_list'),
-    path('invoice/<int:id>', InvoiceDetailView.as_view(), name='invoice_detail'),
+    path('invoice/<int:pk>', InvoiceDetailView.as_view(), name='invoice_detail'),
     path('ticket/', TicketListView.as_view(), name='ticket_list'),
-    path('ticket/<int:id>', TicketDetailView.as_view(), name='ticket_detail'),
-    path('chat/', index, name='index1'),
-    re_path(r'^(?P<room_name>[^/]+)/$', room, name='room'),
+    path('ticket/<int:pk>', TicketDetailView.as_view(), name='ticket_detail'),
+    path('chat/', index, name='index1')
+    # re_path(r'^(?P<room_name>[^/]+)/$', room, name='room'),
 ]

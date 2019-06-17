@@ -57,7 +57,15 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'first_name', 'last_name', 'date_joined', 'last_login', 'email', 'profile')
 
 
+class MessageUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.User
+        fields = ('id', 'username', 'first_name', 'last_name')
+
+
 class MessageSerializer(serializers.ModelSerializer):
+    sent_by = MessageUserSerializer()
 
     class Meta:
         model = models.Message
