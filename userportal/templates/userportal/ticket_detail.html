@@ -1,0 +1,150 @@
+{% load static %}
+
+<div class="box box-success direct-chat direct-chat-success sm-no-margin-bottom">
+    <div class="box-header with-border">
+      <h3 class="box-title" id="direct_chat_header">Ticker # {{ ticket.id }}</h3>
+      <div class="box-tools pull-right">
+        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+      </div>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+      <!-- Conversations are loaded here -->
+      <div class="direct-chat-messages">
+          {% for message in ticket.messages %}
+              {% ifequal user.id message.sent_by.id %}
+                  <div class="direct-chat-msg right">
+                      <div class="direct-chat-info clearfix">
+                        <span class="direct-chat-name  pull-right ">
+                            {{ message.sent_by.first_name }} {{ message.sent_by.last_name }}
+                        </span>
+                        <span class="direct-chat-timestamp pull-left ">
+                            {{ message.sent|date:'Y-m-d H:i' }}
+                        </span>
+                      </div>
+                      <div class="direct-chat-text pull-right">
+                        {{ message.detail }}
+                      </div>
+                  </div>
+              {% else %}
+                  <div class="direct-chat-msg">
+                      <div class="direct-chat-info clearfix">
+                        <span class="direct-chat-name pull-left">
+                            {{ message.sent_by.first_name }} {{ message.sent_by.last_name }}
+                        </span>
+                        <span class="direct-chat-timestamp pull-right">
+                            {{ message.sent|date:'Y-m-d H:i' }}
+                        </span>
+                      </div>
+                      <div class="direct-chat-text">
+                          {{ message.detail }}
+                      </div>
+                  </div>
+              {% endifequal %}
+          {% endfor %}
+      </div>
+    </div>
+<!-- /.box-body -->
+    <div class="box-footer" style="">
+        <div class="input-group">
+            <input type="text" id="chat-message-input" placeholder="Type Message ..." class="form-control">
+            <span class="input-group-btn">
+                <button id="chat-message-submit" class="btn btn-success btn-flat">Send</button>
+            </span>
+        </div>
+    </div>
+<!-- /.box-footer-->
+</div>
+
+<script>
+    function formatDate(date) {
+      let monthNames = [
+        "January", "February", "March",
+        "April", "May", "June", "July",
+        "August", "September", "October",
+        "November", "December"
+      ];
+
+      let day = date.getDate();
+      let monthIndex = date.getMonth();
+      let year = date.getFullYear();
+      let hour = date.getHours();
+      let min= date.getMinutes();
+
+      return `${year}-${+monthIndex}-${day} ${hour}:${min}` ;
+    }
+</script>
+<script>
+
+    $('#sm-chat .box').boxWidget({
+      animationSpeed: 500,
+      collapseTrigger: '[data-widget="collapse"]',
+      removeTrigger: '[data-widget="remove"]',
+      collapseIcon: 'fa-minus',
+      expandIcon: 'fa-plus',
+      removeIcon: 'fa-times'
+    });
+    $(".direct-chat-messages").prop(
+            'scrollTop', $(".direct-chat-messages").prop('scrollHeight')
+    );
+    chatSocket = new ReconnectingWebSocket(
+        `ws://${window.location.host}/ws/chat/{{ ticket.id }}/`
+    );
+    chatSocket.onmessage = function(e) {
+        let message = JSON.parse(e.data)['message'];
+        let newmessagehtml = message.sent_by.id === {{ user.id }} ?
+            `<div class="direct-chat-msg right">
+              <div class="direct-chat-info clearfix">
+                <span class="direct-chat-name  pull-right ">
+                    ${message.sent_by.first_name} ${message.sent_by.last_name}
+                </span>
+                <span class="direct-chat-timestamp pull-left ">
+                    ${formatDate(new Date(message.sent))}
+                </span>
+              </div>
+              <div class="direct-chat-text pull-right">
+                ${message.detail}
+              </div>
+            </div>` : `<div class="direct-chat-msg">
+              <div class="direct-chat-info clearfix">
+                <span class="direct-chat-name  pull-left ">
+                    ${message.sent_by.first_name} ${message.sent_by.last_name}
+                </span>
+                <span class="direct-chat-timestamp pull-right ">
+                    ${formatDate(new Date(message.sent))}
+                </span>
+              </div>
+              <div class="direct-chat-text">
+                ${message.detail}
+              </div>
+            </div>`;
+        $('.direct-chat-messages').append(newmessagehtml);
+        $(".direct-chat-messages").prop(
+                'scrollTop', $(".direct-chat-messages").prop('scrollHeight')
+        );
+    };
+    
+    $('[data-widget="remove"]').on('click', function (event) {
+       chatSocket.close()
+    });
+
+    $('#chat-message-submit').on('click', function(e) {
+        let messageInput = $('#chat-message-input');
+        chatSocket.send(JSON.stringify({
+            'command': 'new_message',
+            'data': {
+                'ticket_id':{{ ticket.id }},
+                'detail': messageInput.val()
+            }
+        }));
+        messageInput.val('');
+    });
+
+    $('#chat-message-input').keyup(function(e) {
+        if (e.keyCode === 13) {  // enter, return
+            $('#chat-message-submit').click();
+        }
+    });
+
+</script>
