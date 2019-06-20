@@ -31,7 +31,10 @@ class ChatConsumer(WebsocketConsumer):
     # Receive message from WebSocket
     def receive(self, text_data):
         payload = json.loads(text_data)
-        payload['data']['sent_by'] = self.scope["user"]
+        if 'sent_by' not in payload['data']:
+            payload['data']['sent_by'] = self.scope["user"]
+        else:
+            payload['data']['sent_by'] = User.objects.get(id=payload['data']['sent_by'])
         message = Message.objects.create(**payload['data'])
         payload = {
             'command': 'new_message',

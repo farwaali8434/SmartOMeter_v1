@@ -11,6 +11,4 @@ urlpatterns = [
     path('invoice/<int:pk>', InvoiceDetailView.as_view(), name='invoice_detail'),
     path('ticket/', TicketListView.as_view(), name='ticket_list'),
     path('ticket/<int:pk>', TicketDetailView.as_view(), name='ticket_detail'),
-    path('chat/', index, name='index1')
-    # re_path(r'^(?P<room_name>[^/]+)/$', room, name='room'),
 ]
